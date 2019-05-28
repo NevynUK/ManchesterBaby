@@ -46,7 +46,7 @@ class CPU:
         print '                 01234567890123456789012345678901'
         for lineNumber in range(self.__storeLines.Length):
             line = self.__storeLines.GetLine(lineNumber)
-            print '{:02}: {} - {} {:16} ; }'.format(lineNumber, line.Hex(), line.Binary(), self.Disassembly(line), self.ReverseBits(line.Value, 32))
+            print '{:02}: {} - {} {:16} ; {}'.format(lineNumber, line.Hex(), line.Binary(), self.Disassembly(line), self.ReverseBits(line.Value, 32))
 
     def PrintRegisters(self):
         '''Display the contents of the registers.'''
