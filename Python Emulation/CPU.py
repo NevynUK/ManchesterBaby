@@ -42,21 +42,21 @@ class CPU:
 
     def PrintStoreLines(self):
         '''Print the contents of the store lines along with the disassembly.'''
-        print '                 00000000001111111111222222222233'
-        print '                 01234567890123456789012345678901'
+        print('                 00000000001111111111222222222233')
+        print('                 01234567890123456789012345678901')
         for lineNumber in range(self.__storeLines.Length):
             line = self.__storeLines.GetLine(lineNumber)
-            print '{:02}: {} - {} {:16} ; {}'.format(lineNumber, line.Hex(), line.Binary(), self.Disassembly(line), self.ReverseBits(line.Value, 32))
+            print('{:02}: {} - {} {:16} ; {}'.format(lineNumber, line.Hex(), line.Binary(), self.Disassembly(line), self.ReverseBits(line.Value, 32)))
 
     def PrintRegisters(self):
         '''Display the contents of the registers.'''
-        print '\nAC: {} - {} {}'.format(self.__accumulator.Hex(), self.__accumulator.Binary(), self.ReverseBits(self.__accumulator.Value, 32))
-        print 'CI: {} - {} {}'.format(self.__ci.Hex(), self.__ci.Binary(), self.ReverseBits(self.LineNumber(self.__ci.Value), 5))
-        print 'PI: {} - {} {}'.format(self.__pi.Hex(), self.__pi.Binary(), self.Disassembly(self.__pi))
+        print('\nAC: {} - {} {}'.format(self.__accumulator.Hex(), self.__accumulator.Binary(), self.ReverseBits(self.__accumulator.Value, 32)))
+        print('CI: {} - {} {}'.format(self.__ci.Hex(), self.__ci.Binary(), self.ReverseBits(self.LineNumber(self.__ci.Value), 5)))
+        print('PI: {} - {} {}'.format(self.__pi.Hex(), self.__pi.Binary(), self.Disassembly(self.__pi)))
 
     def Print(self):
         '''Print a readable version of the internal state of the CPU.'''
-        print '\n--------------- SSEM Machine State ---------------\n'
+        print('\n--------------- SSEM Machine State ---------------\n')
         self.PrintStoreLines()
         self.PrintRegisters()
 
@@ -127,7 +127,7 @@ class CPU:
         instructionCount = 0
         self.__ci = Register.Register(0)
         self.Print()
-        print '\nExecuting program:'
+        print('\nExecuting program:')
         while running:
             #
             #   First, increment CI (the program counter).
@@ -147,7 +147,7 @@ class CPU:
                 instruction = mnemonic
             else:
                 instruction = '{} {}'.format(mnemonic, lineNumber)
-            print '{:-5} - {:02}: {}'.format(instructionCount, storeLineNumber, instruction)
+            print('{:-5} - {:02}: {}'.format(instructionCount, storeLineNumber, instruction))
             #
             #   Execute the instruction.
             #
@@ -175,7 +175,7 @@ class CPU:
                 command = raw_input()
                 if (command == 'stop'): return
         self.Print()
-        print 'Executed {} instruction(s)'.format(instructionCount)
+        print('Executed {} instruction(s)'.format(instructionCount))
 
 #
 #   Main program loop implementing tests for the CPU class.  The loop only executes
@@ -191,11 +191,11 @@ if (__name__ == '__main__'):
 #    if (cpu.LineNumber(sl.GetLine(0).Value != 0b1000)): raise ValueError
     #                                  00000000001111111111222222222233
     #                                  01234567890123456789012345678901
-    sl.SetLine(01, Register.Register(0b11001000000000010000000000000000))
-    sl.SetLine(02, Register.Register(0b00000000000000110000000000000000))
-    sl.SetLine(03, Register.Register(0b01010000000000000000000000000000))
-    sl.SetLine(04, Register.Register(0b00000000000001110000000000000000))
+    sl.SetLine(1, Register.Register(0b11001000000000010000000000000000))
+    sl.SetLine(2, Register.Register(0b00000000000000110000000000000000))
+    sl.SetLine(3, Register.Register(0b01010000000000000000000000000000))
+    sl.SetLine(4, Register.Register(0b00000000000001110000000000000000))
     sl.SetLine(10, Register.Register(0b00000000000000000000000000000000))
     sl.SetLine(19, Register.Register(0b11001000000000000000000000000000))
     cpu.RunProgram()
-    print 'CPU tests completed successfully.'
+    print('CPU tests completed successfully.')

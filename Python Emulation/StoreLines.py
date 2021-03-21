@@ -66,4 +66,4 @@ if (__name__ == '__main__'):
         sl.GetLine(500)
     except IndexError:
         pass
-    print 'StoreLines tests completed successfully.'
+    print('StoreLines tests completed successfully.')
