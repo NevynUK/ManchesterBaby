@@ -6,7 +6,7 @@ import Register
 import StoreLines
 
 #
-#   Dictionary containing the instruction set, the associted 'mnemonic' and the 'description' of the instruction.
+#   Dictionary containing the instruction set, the associated 'mnemonic' and the 'description' of the instruction.
 #
 #   Instructions are stored in a list with each entry being a dictionary item.  The dictionary item contains the
 #   SSEM opcode for instruction along with information about the instruction:
