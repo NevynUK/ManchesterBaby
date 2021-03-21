@@ -6,7 +6,7 @@ import Register
 import StoreLines
 import CPU
 
-#   Dictionary containing the instruction set, the associted 'mnemonic' and the 'description' of the instruction.
+#   Dictionary containing the instruction set, the associated 'mnemonic' and the 'description' of the instruction.
 #
 #   Instructions are stored in a list with each entry being a dictionary item.  The dictionary item contains the
 #   SSEM opcode for instruction along with information about the instruction:
@@ -64,7 +64,7 @@ def Assembler(fileName, storeLines):
                 else:
                     i = next((i for i, x in enumerate(instructions) if (x['mnemonic'] == m)), None)
                     if (i == None):
-                        print 'Cannot process line {}: {}'.format(lineNumber, line)
+                        print('Cannot process line {}: {}'.format(lineNumber, line))
                         exit()
                     else:
                         opcode = instructions[i]['opcode']

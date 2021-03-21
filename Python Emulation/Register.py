@@ -52,4 +52,4 @@ if (__name__ == '__main__'):
     reg.Value = 0x1f1f
     if (reg.Hex() != '0x00001f1f'): raise ValueError
     if (reg.Binary() != '00000000000000000001111100011111'): raise ValueError
-    print 'Register tests completed successfully.'
+    print('Register tests completed successfully.')
