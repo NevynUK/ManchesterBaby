@@ -47,9 +47,10 @@ if (__name__ == '__main__'):
     if (sl.Length != 32): raise ValueError
     sl = StoreLines(100)
     if (sl.Length != 100): raise ValueError
-    if (sl.GetLine(0) != 0): raise ValueError
+    if (sl.GetLine(0).Value != 0): raise ValueError
     sl.SetLine(0, 1)
-    if (sl.GetLine(0) != 1): raise ValueError
+    if (sl.GetLine(0) != 1):
+        raise ValueError
     try:
         sl.SetLine(-1, 0)
     except IndexError:
