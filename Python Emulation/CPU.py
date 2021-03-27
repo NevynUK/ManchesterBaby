@@ -39,6 +39,7 @@ class CPU:
         self.__pi = Register.Register()
         self.__storeLines = storeLines
         self.__accumulator = Register.Register()
+        self.__stopped = True
 
     def PrintStoreLines(self):
         '''Print the contents of the store lines along with the disassembly.'''
@@ -76,6 +77,13 @@ class CPU:
         else:
             instruction = '{} {}'.format(mnemonic, lineNumber)
         return(instruction)
+
+    def Reset(self):
+        '''Reset the CPU so that it is ready to execute the program in the store lines.'''
+        self.__accumulator = Register.Register(0)
+        self.__ci = Register.Register(0)
+        self.__stopped = True
+        self.Print()
 
     def ReverseBits(self, value, bitCount):
         '''Reverse the bits in the specified value.  This method provides the CPU
@@ -119,58 +127,60 @@ class CPU:
         lineNumber = self.ReverseBits(self.__ci.Value, 32)
         lineNumber = (lineNumber + 1)
         self.__ci.Value = self.ReverseBits(lineNumber, 32)
+    
+    def SingleStep(self):
+        '''Execute the next instruction.'''
+        #
+        #   First, increment CI (the program counter).
+        #
+        self.IncrementCI()
+        #
+        #   Extract the store line given by CI from memory and put it in PI.
+        #
+        storeLineNumber = self.ReverseBits(self.LineNumber(self.__ci.Value), 5)
+        self.__pi = self.__storeLines.GetLine(storeLineNumber)
+        #
+        #   Decode the instruction.
+        #
+        mnemonic, lineNumber = self.DecodeInstruction(self.__pi)
+        # if ((mnemonic == 'STOP') or (mnemonic == 'CMP')):
+        #     instruction = mnemonic
+        # else:
+        #     instruction = '{} {}'.format(mnemonic, lineNumber)
+        # print('{:-5} - {:02}: {}'.format(instructionCount, storeLineNumber, instruction))
+        #
+        #   Execute the instruction.
+        #
+        if (mnemonic == 'JMP'):
+            self.__ci = Register.Register(self.__storeLines.GetLine(lineNumber).Value)
+        elif (mnemonic == 'JRP'):
+            self.__ci = self.Add(self.__ci, self.__storeLines.GetLine(lineNumber))
+        elif (mnemonic == 'LDN'):
+            line = self.__storeLines.GetLine(lineNumber)
+            negatedValue = self.ReverseBits(line.Value, 32) * -1
+            self.__accumulator.Value = self.ReverseBits(negatedValue, 32)
+        elif (mnemonic == 'STO'):
+            self.__storeLines.SetLine(lineNumber, Register.Register(self.__accumulator.Value))
+        elif ((mnemonic == 'SUB') or (mnemonic == '---')):
+            self.__accumulator = self.Sub(self.__accumulator, self.__storeLines.GetLine(lineNumber))
+        elif (mnemonic == 'CMP'):
+            if (self.__accumulator.Value & 0x1):
+                self.IncrementCI()
+        elif (mnemonic == 'STOP'):
+            self.__stopped = True
+        else:
+            raise ValueError
 
     def RunProgram(self, debugging = False):
         '''Run the program contained in the store.'''
-        self.__accumulator = Register.Register(0)
-        running = True
+        self.Reset()
         instructionCount = 0
-        self.__ci = Register.Register(0)
-        self.Print()
+        self.__stopped = False
         print('\nExecuting program:')
-        while running:
-            #
-            #   First, increment CI (the program counter).
-            #
-            self.IncrementCI()
-            #
-            #   Extract the store line given by CI from memory and put it in PI.
-            #
-            storeLineNumber = self.ReverseBits(self.LineNumber(self.__ci.Value), 5)
-            self.__pi = self.__storeLines.GetLine(storeLineNumber)
-            #
-            #   Decode the instruction.
-            #
-            instructionCount += 1
-            mnemonic, lineNumber = self.DecodeInstruction(self.__pi)
-            if ((mnemonic == 'STOP') or (mnemonic == 'CMP')):
-                instruction = mnemonic
-            else:
-                instruction = '{} {}'.format(mnemonic, lineNumber)
-            print('{:-5} - {:02}: {}'.format(instructionCount, storeLineNumber, instruction))
-            #
-            #   Execute the instruction.
-            #
-            if (mnemonic == 'JMP'):
-                self.__ci = Register.Register(self.__storeLines.GetLine(lineNumber).Value)
-            elif (mnemonic == 'JRP'):
-                self.__ci = self.Add(self.__ci, self.__storeLines.GetLine(lineNumber))
-            elif (mnemonic == 'LDN'):
-                line = self.__storeLines.GetLine(lineNumber)
-                negatedValue = self.ReverseBits(line.Value, 32) * -1
-                self.__accumulator.Value = self.ReverseBits(negatedValue, 32)
-            elif (mnemonic == 'STO'):
-                self.__storeLines.SetLine(lineNumber, Register.Register(self.__accumulator.Value))
-            elif ((mnemonic == 'SUB') or (mnemonic == '---')):
-                self.__accumulator = self.Sub(self.__accumulator, self.__storeLines.GetLine(lineNumber))
-            elif (mnemonic == 'CMP'):
-                if (self.__accumulator.Value & 0x1):
-                    self.IncrementCI()
-            elif (mnemonic == 'STOP'):
-                running = False
-            else:
-                raise ValueError
-            if (running and debugging):
+        while (self.__stopped == False):
+            self.SingleStep()
+            instructionCount = instructionCount + 1
+            if (debugging):
                 self.Print()
                 command = raw_input()
                 if (command == 'stop'): return
