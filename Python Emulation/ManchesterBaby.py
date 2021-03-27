@@ -48,6 +48,16 @@ def ReverseBits(value, bitCount = 32):
         bitCount -= 1
     return(result)
 
+def Instruction(name):
+    '''Look up the mnemonic to obtain the instruction information.
+    '''
+    i = [element for element in instructions if element['mnemonic'] == name]
+    if (len(i) != 1):
+        result = None
+    else:
+        result = i[0]
+    return result
+
 def Assembler(fileName, storeLines):
     '''Open the specified file and convert the assembler instructions into
     binary and save into the storeLines.'''
@@ -62,12 +72,19 @@ def Assembler(fileName, storeLines):
                 if (m == 'NUM'):
                     store = ReverseBits(int(words[2]))
                 else:
-                    i = next((i for i, x in enumerate(instructions) if (x['mnemonic'] == m)), None)
+                    #
+                    #   The instruction below will work with python on computer but not with CircuitPython.
+                    #
+                    # i = next((i for i, x in enumerate(instructions) if (x['mnemonic'] == m)), None)
+                    #
+                    #   The instruction below works with both python on a computer and with CircuitPython.
+                    #
+                    i = Instruction(m)
                     if (i == None):
                         print('Cannot process line {}: {}'.format(lineNumber, line))
                         exit()
                     else:
-                        opcode = instructions[i]['opcode']
+                        opcode = i['opcode']
                         if (m in ['STOP', 'HLT', 'CMP', 'SKN']):
                             ln = 0
                         else:
@@ -77,7 +94,8 @@ def Assembler(fileName, storeLines):
 #
 #   The Manchester Baby
 #
-storeLines = StoreLines.StoreLines(32)
-Assembler('Samples/hfr989.asm', storeLines)
-cpu = CPU.CPU(storeLines)
-cpu.RunProgram(debugging = False)
+if (__name__ == '__main__'):
+    storeLines = StoreLines.StoreLines(32)
+    Assembler('Samples/hfr989.asm', storeLines)
+    cpu = CPU.CPU(storeLines)
+    cpu.RunProgram(debugging = False)
