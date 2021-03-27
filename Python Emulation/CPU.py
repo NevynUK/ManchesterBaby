@@ -33,6 +33,13 @@ instructions = [
 #   Implement the SSEM CPU.
 #
 class CPU:
+    '''Implement the methods needed to simulate the operation of the CPU
+    in the SSEM (Manchester Baby).'''
+#------------------------------------------------------------------------------
+#
+#                       Class construction.
+#
+#------------------------------------------------------------------------------
     def __init__(self, storeLines = None):
         '''Initialise the CPU.'''
         self.CI = Register.Register()
@@ -41,6 +48,11 @@ class CPU:
         self.Accumulator = Register.Register()
         self.Stopped = True
 
+#------------------------------------------------------------------------------
+#
+#                           Properties.
+#
+#------------------------------------------------------------------------------
     def __GetStopped(self):
         '''Is the CPU stopped?'''
         return(self.__stopped)
@@ -91,6 +103,11 @@ class CPU:
 
     StoreLines = property(__GetStoreLines, __SetStoreLines, None, None)
 
+#------------------------------------------------------------------------------
+#
+#                               Methods.
+#
+#------------------------------------------------------------------------------
     def PrintStoreLines(self):
         '''Print the contents of the store lines along with the disassembly.'''
         print('                 00000000001111111111222222222233')
@@ -220,6 +237,12 @@ class CPU:
             self.Stopped = True
         else:
             raise ValueError
+
+#------------------------------------------------------------------------------
+#
+#                               Tests.
+#
+#------------------------------------------------------------------------------
 
 #
 #   Main program loop implementing tests for the CPU class.  The loop only executes
