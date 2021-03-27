@@ -17,7 +17,7 @@ class Register:
         return(self.__value)
 
     def __SetValue(self, value):
-        '''Set the segister to the new value, note that the value must be positive
+        '''Set the register to the new value, note that the value must be positive
         and less than 0x100000000'''
         if ((value < 0) or (value > 0xffffffff)):
             raise ValueError
@@ -30,7 +30,7 @@ class Register:
         return('{0:#010x}'.format(self.Value))
 
     def Binary(self):
-        '''Return a binary representation of the register without the leadng 0b prefix.'''
+        '''Return a binary representation of the register without the leading 0b prefix.'''
         return('{0:#034b}'.format(self.Value)[2:])
 
 #
