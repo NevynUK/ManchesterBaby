@@ -35,10 +35,10 @@ instructions = [
 class CPU:
     def __init__(self, storeLines = None):
         '''Initialise the CPU.'''
-        self.__ci = Register.Register()
-        self.__pi = Register.Register()
-        self.__storeLines = storeLines
-        self.__accumulator = Register.Register()
+        self.CI = Register.Register()
+        self.PI = Register.Register()
+        self.StoreLines = storeLines
+        self.Accumulator = Register.Register()
         self.Stopped = True
 
     def __GetStopped(self):
@@ -51,19 +51,59 @@ class CPU:
 
     Stopped = property(__GetStopped, __SetStopped, None, None)
 
+    def __GetCI(self):
+        '''Current instruction register (CI)'''
+        return(self.__ci)
+
+    def __SetCI(self, ci):
+        '''Current instruction register (CI)'''
+        self.__ci = ci
+
+    CI = property(__GetCI, __SetCI, None, None)
+
+    def __GetPI(self):
+        '''Present instruction register.'''
+        return(self.__pi)
+
+    def __SetPI(self, pi):
+        '''Present instruction register.'''
+        self.__pi = pi
+
+    PI = property(__GetPI, __SetPI, None, None)
+
+    def __GetAccumulator(self):
+        '''Accumulator register.'''
+        return(self.__accumulator)
+
+    def __SetAccumulator(self, accumulator):
+        '''Accumulator register.'''
+        self.__accumulator = accumulator
+
+    Accumulator = property(__GetAccumulator, __SetAccumulator, None, None)
+
+    def __GetStoreLines(self):
+        '''Store lines holding the application to be / being executed.'''
+        return(self.__storeLines)
+
+    def __SetStoreLines(self, storeLines):
+        '''Store lines holding the application to be / being executed.'''
+        self.__storeLines = storeLines
+
+    StoreLines = property(__GetStoreLines, __SetStoreLines, None, None)
+
     def PrintStoreLines(self):
         '''Print the contents of the store lines along with the disassembly.'''
         print('                 00000000001111111111222222222233')
         print('                 01234567890123456789012345678901')
-        for lineNumber in range(self.__storeLines.Length):
-            line = self.__storeLines.GetLine(lineNumber)
+        for lineNumber in range(self.StoreLines.Length):
+            line = self.StoreLines.GetLine(lineNumber)
             print('{:02}: {} - {} {:16} ; {}'.format(lineNumber, line.Hex(), line.Binary(), self.Disassembly(line), self.ReverseBits(line.Value, 32)))
 
     def PrintRegisters(self):
         '''Display the contents of the registers.'''
-        print('\nAC: {} - {} {}'.format(self.__accumulator.Hex(), self.__accumulator.Binary(), self.ReverseBits(self.__accumulator.Value, 32)))
-        print('CI: {} - {} {}'.format(self.__ci.Hex(), self.__ci.Binary(), self.ReverseBits(self.LineNumber(self.__ci.Value), 5)))
-        print('PI: {} - {} {}'.format(self.__pi.Hex(), self.__pi.Binary(), self.Disassembly(self.__pi)))
+        print('\nAC: {} - {} {}'.format(self.Accumulator.Hex(), self.Accumulator.Binary(), self.ReverseBits(self.Accumulator.Value, 32)))
+        print('CI: {} - {} {}'.format(self.CI.Hex(), self.CI.Binary(), self.ReverseBits(self.LineNumber(self.CI.Value), 5)))
+        print('PI: {} - {} {}'.format(self.PI.Hex(), self.PI.Binary(), self.Disassembly(self.PI)))
 
     def Print(self):
         '''Print a readable version of the internal state of the CPU.'''
@@ -90,8 +130,8 @@ class CPU:
 
     def Reset(self):
         '''Reset the CPU so that it is ready to execute the program in the store lines.'''
-        self.__accumulator = Register.Register(0)
-        self.__ci = Register.Register(0)
+        self.Accumulator = Register.Register(0)
+        self.CI = Register.Register(0)
         self.Stopped = True
         self.Print()
 
@@ -134,9 +174,9 @@ class CPU:
 
     def IncrementCI(self):
         '''Increment the control register by one.'''
-        lineNumber = self.ReverseBits(self.__ci.Value, 32)
+        lineNumber = self.ReverseBits(self.CI.Value, 32)
         lineNumber = (lineNumber + 1)
-        self.__ci.Value = self.ReverseBits(lineNumber, 32)
+        self.CI.Value = self.ReverseBits(lineNumber, 32)
     
     def SingleStep(self):
         '''Execute the next instruction.'''
@@ -147,12 +187,12 @@ class CPU:
         #
         #   Extract the store line given by CI from memory and put it in PI.
         #
-        storeLineNumber = self.ReverseBits(self.LineNumber(self.__ci.Value), 5)
-        self.__pi = self.__storeLines.GetLine(storeLineNumber)
+        storeLineNumber = self.ReverseBits(self.LineNumber(self.CI.Value), 5)
+        self.PI = self.StoreLines.GetLine(storeLineNumber)
         #
         #   Decode the instruction.
         #
-        mnemonic, lineNumber = self.DecodeInstruction(self.__pi)
+        mnemonic, lineNumber = self.DecodeInstruction(self.PI)
         # if ((mnemonic == 'STOP') or (mnemonic == 'CMP')):
         #     instruction = mnemonic
         # else:
@@ -162,19 +202,19 @@ class CPU:
         #   Execute the instruction.
         #
         if (mnemonic == 'JMP'):
-            self.__ci = Register.Register(self.__storeLines.GetLine(lineNumber).Value)
+            self.CI = Register.Register(self.StoreLines.GetLine(lineNumber).Value)
         elif (mnemonic == 'JRP'):
-            self.__ci = self.Add(self.__ci, self.__storeLines.GetLine(lineNumber))
+            self.CI = self.Add(self.CI, self.StoreLines.GetLine(lineNumber))
         elif (mnemonic == 'LDN'):
-            line = self.__storeLines.GetLine(lineNumber)
+            line = self.StoreLines.GetLine(lineNumber)
             negatedValue = self.ReverseBits(line.Value, 32) * -1
-            self.__accumulator.Value = self.ReverseBits(negatedValue, 32)
+            self.Accumulator.Value = self.ReverseBits(negatedValue, 32)
         elif (mnemonic == 'STO'):
-            self.__storeLines.SetLine(lineNumber, Register.Register(self.__accumulator.Value))
+            self.StoreLines.SetLine(lineNumber, Register.Register(self.Accumulator.Value))
         elif ((mnemonic == 'SUB') or (mnemonic == '---')):
-            self.__accumulator = self.Sub(self.__accumulator, self.__storeLines.GetLine(lineNumber))
+            self.Accumulator = self.Sub(self.Accumulator, self.StoreLines.GetLine(lineNumber))
         elif (mnemonic == 'CMP'):
-            if (self.__accumulator.Value & 0x1):
+            if (self.Accumulator.Value & 0x1):
                 self.IncrementCI()
         elif (mnemonic == 'STOP'):
             self.Stopped = True
