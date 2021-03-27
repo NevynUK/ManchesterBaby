@@ -39,7 +39,17 @@ class CPU:
         self.__pi = Register.Register()
         self.__storeLines = storeLines
         self.__accumulator = Register.Register()
-        self.__stopped = True
+        self.Stopped = True
+
+    def __GetStopped(self):
+        '''Is the CPU stopped?'''
+        return(self.__stopped)
+
+    def __SetStopped(self, stopped):
+        '''Is the CPU stopped'''
+        self.__stopped = stopped
+
+    Stopped = property(__GetStopped, __SetStopped, None, None)
 
     def PrintStoreLines(self):
         '''Print the contents of the store lines along with the disassembly.'''
@@ -82,7 +92,7 @@ class CPU:
         '''Reset the CPU so that it is ready to execute the program in the store lines.'''
         self.__accumulator = Register.Register(0)
         self.__ci = Register.Register(0)
-        self.__stopped = True
+        self.Stopped = True
         self.Print()
 
     def ReverseBits(self, value, bitCount):
@@ -167,25 +177,9 @@ class CPU:
             if (self.__accumulator.Value & 0x1):
                 self.IncrementCI()
         elif (mnemonic == 'STOP'):
-            self.__stopped = True
+            self.Stopped = True
         else:
             raise ValueError
-
-    def RunProgram(self, debugging = False):
-        '''Run the program contained in the store.'''
-        self.Reset()
-        instructionCount = 0
-        self.__stopped = False
-        print('\nExecuting program:')
-        while (self.__stopped == False):
-            self.SingleStep()
-            instructionCount = instructionCount + 1
-            if (debugging):
-                self.Print()
-                command = raw_input()
-                if (command == 'stop'): return
-        self.Print()
-        print('Executed {} instruction(s)'.format(instructionCount))
 
 #
 #   Main program loop implementing tests for the CPU class.  The loop only executes
@@ -209,5 +203,5 @@ if (__name__ == '__main__'):
     sl.SetLine(4, Register.Register(0b00000000000001110000000000000000))
     sl.SetLine(10, Register.Register(0b00000000000000000000000000000000))
     sl.SetLine(19, Register.Register(0b11001000000000000000000000000000))
-    cpu.RunProgram()
+    # cpu.RunProgram()
     print('CPU tests completed successfully.')

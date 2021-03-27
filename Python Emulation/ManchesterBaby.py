@@ -91,6 +91,23 @@ def Assembler(fileName, storeLines):
                             ln = int(words[2])
                         store = ReverseBits(ln | (opcode << 13))
                 storeLines.SetLine(sl, Register.Register(store))
+
+def RunProgram(cpu, debugging = False):
+    '''Run the program contained in the store.'''
+    cpu.Reset()
+    instructionCount = 0
+    cpu.Stopped = False
+    print('\nExecuting program:')
+    while (cpu.Stopped == False):
+        cpu.SingleStep()
+        instructionCount = instructionCount + 1
+        # if (debugging):
+        #     self.Print()
+        #     command = raw_input()
+        #     if (command == 'stop'): return
+    cpu.Print()
+    print('Executed {} instruction(s)'.format(instructionCount))
+
 #
 #   The Manchester Baby
 #
@@ -98,4 +115,5 @@ if (__name__ == '__main__'):
     storeLines = StoreLines.StoreLines(32)
     Assembler('Samples/hfr989.asm', storeLines)
     cpu = CPU.CPU(storeLines)
-    cpu.RunProgram(debugging = False)
+    RunProgram(cpu, debugging = False)
+    # cpu.RunProgram(debugging = False)
