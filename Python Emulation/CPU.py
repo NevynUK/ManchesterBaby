@@ -100,7 +100,7 @@ class CPU:
         return(Register.Register(self.ReverseBits((a + b) & 0xffffffff, 32)))
 
     def Sub(self, registerA, registerB):
-        '''Subtract registerB from registerA and return the result as a new Register objectr.'''
+        '''Subtract registerB from registerA and return the result as a new Register object.'''
         a = self.ReverseBits(registerA.Value, 32)
         b = self.ReverseBits(registerB.Value, 32)
         return(Register.Register(self.ReverseBits((a - b) & 0xffffffff, 32)))
@@ -187,8 +187,10 @@ if (__name__ == '__main__'):
     for i in instructions:
         if (i['opcode'] != cpu.ReverseBits(i['instruction']['twoComplementOpCode'], 3)):
             raise ValueError
-#    if (cpu.Instruction(sl.GetLine(0).Value) != 0b100): raise ValueError
-#    if (cpu.LineNumber(sl.GetLine(0).Value != 0b1000)): raise ValueError
+    # if (cpu.Instruction(sl.GetLine(0).Value) != 0b100):
+    #    raise ValueError
+    # if (cpu.LineNumber(sl.GetLine(0).Value != 0b1000)):
+    #    raise ValueError
     #                                  00000000001111111111222222222233
     #                                  01234567890123456789012345678901
     sl.SetLine(1, Register.Register(0b11001000000000010000000000000000))
