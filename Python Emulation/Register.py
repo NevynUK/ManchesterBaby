@@ -8,16 +8,26 @@
 #
 class Register:
     '''Register in the Manchester Baby.'''
+#------------------------------------------------------------------------------
+#
+#                       Class construction.
+#
+#------------------------------------------------------------------------------
     def __init__(self, value = 0):
         '''Create a new register and set the value to 0.'''
         self.Value = value
 
+#------------------------------------------------------------------------------
+#
+#                           Properties.
+#
+#------------------------------------------------------------------------------
     def __GetValue(self):
         '''Get the register value.'''
         return(self.__value)
 
     def __SetValue(self, value):
-        '''Set the segister to the new value, note that the value must be positive
+        '''Set the register to the new value, note that the value must be positive
         and less than 0x100000000'''
         if ((value < 0) or (value > 0xffffffff)):
             raise ValueError
@@ -25,13 +35,24 @@ class Register:
 
     Value = property(__GetValue, __SetValue, None, None)
 
+#------------------------------------------------------------------------------
+#
+#                               Methods.
+#
+#------------------------------------------------------------------------------
     def Hex(self):
         '''Return a hexadecimal representation of the register value.'''
         return('{0:#010x}'.format(self.Value))
 
     def Binary(self):
-        '''Return a binary representation of the register without the leadng 0b prefix.'''
+        '''Return a binary representation of the register without the leading 0b prefix.'''
         return('{0:#034b}'.format(self.Value)[2:])
+
+#------------------------------------------------------------------------------
+#
+#                               Tests.
+#
+#------------------------------------------------------------------------------
 
 #
 #   Tests for the Register class.

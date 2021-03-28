@@ -33,26 +33,94 @@ instructions = [
 #   Implement the SSEM CPU.
 #
 class CPU:
+    '''Implement the methods needed to simulate the operation of the CPU
+    in the SSEM (Manchester Baby).'''
+#------------------------------------------------------------------------------
+#
+#                       Class construction.
+#
+#------------------------------------------------------------------------------
     def __init__(self, storeLines = None):
         '''Initialise the CPU.'''
-        self.__ci = Register.Register()
-        self.__pi = Register.Register()
-        self.__storeLines = storeLines
-        self.__accumulator = Register.Register()
+        self.CI = Register.Register()
+        self.PI = Register.Register()
+        self.StoreLines = storeLines
+        self.Accumulator = Register.Register()
+        self.Stopped = True
 
+#------------------------------------------------------------------------------
+#
+#                           Properties.
+#
+#------------------------------------------------------------------------------
+    def __GetStopped(self):
+        '''Is the CPU stopped?'''
+        return(self.__stopped)
+
+    def __SetStopped(self, stopped):
+        '''Is the CPU stopped'''
+        self.__stopped = stopped
+
+    Stopped = property(__GetStopped, __SetStopped, None, None)
+
+    def __GetCI(self):
+        '''Current instruction register (CI)'''
+        return(self.__ci)
+
+    def __SetCI(self, ci):
+        '''Current instruction register (CI)'''
+        self.__ci = ci
+
+    CI = property(__GetCI, __SetCI, None, None)
+
+    def __GetPI(self):
+        '''Present instruction register.'''
+        return(self.__pi)
+
+    def __SetPI(self, pi):
+        '''Present instruction register.'''
+        self.__pi = pi
+
+    PI = property(__GetPI, __SetPI, None, None)
+
+    def __GetAccumulator(self):
+        '''Accumulator register.'''
+        return(self.__accumulator)
+
+    def __SetAccumulator(self, accumulator):
+        '''Accumulator register.'''
+        self.__accumulator = accumulator
+
+    Accumulator = property(__GetAccumulator, __SetAccumulator, None, None)
+
+    def __GetStoreLines(self):
+        '''Store lines holding the application to be / being executed.'''
+        return(self.__storeLines)
+
+    def __SetStoreLines(self, storeLines):
+        '''Store lines holding the application to be / being executed.'''
+        self.__storeLines = storeLines
+
+    StoreLines = property(__GetStoreLines, __SetStoreLines, None, None)
+
+#------------------------------------------------------------------------------
+#
+#                               Methods.
+#
+#------------------------------------------------------------------------------
     def PrintStoreLines(self):
         '''Print the contents of the store lines along with the disassembly.'''
         print('                 00000000001111111111222222222233')
         print('                 01234567890123456789012345678901')
-        for lineNumber in range(self.__storeLines.Length):
-            line = self.__storeLines.GetLine(lineNumber)
+        for lineNumber in range(self.StoreLines.Length):
+            line = self.StoreLines.GetLine(lineNumber)
             print('{:02}: {} - {} {:16} ; {}'.format(lineNumber, line.Hex(), line.Binary(), self.Disassembly(line), self.ReverseBits(line.Value, 32)))
 
     def PrintRegisters(self):
         '''Display the contents of the registers.'''
-        print('\nAC: {} - {} {}'.format(self.__accumulator.Hex(), self.__accumulator.Binary(), self.ReverseBits(self.__accumulator.Value, 32)))
-        print('CI: {} - {} {}'.format(self.__ci.Hex(), self.__ci.Binary(), self.ReverseBits(self.LineNumber(self.__ci.Value), 5)))
-        print('PI: {} - {} {}'.format(self.__pi.Hex(), self.__pi.Binary(), self.Disassembly(self.__pi)))
+        print('\nAC: {} - {} {}'.format(self.Accumulator.Hex(), self.Accumulator.Binary(), self.ReverseBits(self.Accumulator.Value, 32)))
+        print('CI: {} - {} {}'.format(self.CI.Hex(), self.CI.Binary(), self.ReverseBits(self.LineNumber(self.CI.Value), 5)))
+        print('PI: {} - {} {}'.format(self.PI.Hex(), self.PI.Binary(), self.Disassembly(self.PI)))
 
     def Print(self):
         '''Print a readable version of the internal state of the CPU.'''
@@ -77,6 +145,13 @@ class CPU:
             instruction = '{} {}'.format(mnemonic, lineNumber)
         return(instruction)
 
+    def Reset(self):
+        '''Reset the CPU so that it is ready to execute the program in the store lines.'''
+        self.Accumulator = Register.Register(0)
+        self.CI = Register.Register(0)
+        self.Stopped = True
+        self.Print()
+
     def ReverseBits(self, value, bitCount):
         '''Reverse the bits in the specified value.  This method provides the CPU
         with the ability to translate SSEM numbers into conventional twos complement
@@ -100,7 +175,7 @@ class CPU:
         return(Register.Register(self.ReverseBits((a + b) & 0xffffffff, 32)))
 
     def Sub(self, registerA, registerB):
-        '''Subtract registerB from registerA and return the result as a new Register objectr.'''
+        '''Subtract registerB from registerA and return the result as a new Register object.'''
         a = self.ReverseBits(registerA.Value, 32)
         b = self.ReverseBits(registerB.Value, 32)
         return(Register.Register(self.ReverseBits((a - b) & 0xffffffff, 32)))
@@ -116,66 +191,58 @@ class CPU:
 
     def IncrementCI(self):
         '''Increment the control register by one.'''
-        lineNumber = self.ReverseBits(self.__ci.Value, 32)
+        lineNumber = self.ReverseBits(self.CI.Value, 32)
         lineNumber = (lineNumber + 1)
-        self.__ci.Value = self.ReverseBits(lineNumber, 32)
+        self.CI.Value = self.ReverseBits(lineNumber, 32)
+    
+    def SingleStep(self):
+        '''Execute the next instruction.'''
+        #
+        #   First, increment CI (the program counter).
+        #
+        self.IncrementCI()
+        #
+        #   Extract the store line given by CI from memory and put it in PI.
+        #
+        storeLineNumber = self.ReverseBits(self.LineNumber(self.CI.Value), 5)
+        self.PI = self.StoreLines.GetLine(storeLineNumber)
+        #
+        #   Decode the instruction.
+        #
+        mnemonic, lineNumber = self.DecodeInstruction(self.PI)
+        # if ((mnemonic == 'STOP') or (mnemonic == 'CMP')):
+        #     instruction = mnemonic
+        # else:
+        #     instruction = '{} {}'.format(mnemonic, lineNumber)
+        # print('{:-5} - {:02}: {}'.format(instructionCount, storeLineNumber, instruction))
+        #
+        #   Execute the instruction.
+        #
+        if (mnemonic == 'JMP'):
+            self.CI = Register.Register(self.StoreLines.GetLine(lineNumber).Value)
+        elif (mnemonic == 'JRP'):
+            self.CI = self.Add(self.CI, self.StoreLines.GetLine(lineNumber))
+        elif (mnemonic == 'LDN'):
+            line = self.StoreLines.GetLine(lineNumber)
+            negatedValue = self.ReverseBits(line.Value, 32) * -1
+            self.Accumulator.Value = self.ReverseBits(negatedValue, 32)
+        elif (mnemonic == 'STO'):
+            self.StoreLines.SetLine(lineNumber, Register.Register(self.Accumulator.Value))
+        elif ((mnemonic == 'SUB') or (mnemonic == '---')):
+            self.Accumulator = self.Sub(self.Accumulator, self.StoreLines.GetLine(lineNumber))
+        elif (mnemonic == 'CMP'):
+            if (self.Accumulator.Value & 0x1):
+                self.IncrementCI()
+        elif (mnemonic == 'STOP'):
+            self.Stopped = True
+        else:
+            raise ValueError
 
-    def RunProgram(self, debugging = False):
-        '''Run the program contained in the store.'''
-        self.__accumulator = Register.Register(0)
-        running = True
-        instructionCount = 0
-        self.__ci = Register.Register(0)
-        self.Print()
-        print('\nExecuting program:')
-        while running:
-            #
-            #   First, increment CI (the program counter).
-            #
-            self.IncrementCI()
-            #
-            #   Extract the store line given by CI from memory and put it in PI.
-            #
-            storeLineNumber = self.ReverseBits(self.LineNumber(self.__ci.Value), 5)
-            self.__pi = self.__storeLines.GetLine(storeLineNumber)
-            #
-            #   Decode the instruction.
-            #
-            instructionCount += 1
-            mnemonic, lineNumber = self.DecodeInstruction(self.__pi)
-            if ((mnemonic == 'STOP') or (mnemonic == 'CMP')):
-                instruction = mnemonic
-            else:
-                instruction = '{} {}'.format(mnemonic, lineNumber)
-            print('{:-5} - {:02}: {}'.format(instructionCount, storeLineNumber, instruction))
-            #
-            #   Execute the instruction.
-            #
-            if (mnemonic == 'JMP'):
-                self.__ci = Register.Register(self.__storeLines.GetLine(lineNumber).Value)
-            elif (mnemonic == 'JRP'):
-                self.__ci = self.Add(self.__ci, self.__storeLines.GetLine(lineNumber))
-            elif (mnemonic == 'LDN'):
-                line = self.__storeLines.GetLine(lineNumber)
-                negatedValue = self.ReverseBits(line.Value, 32) * -1
-                self.__accumulator.Value = self.ReverseBits(negatedValue, 32)
-            elif (mnemonic == 'STO'):
-                self.__storeLines.SetLine(lineNumber, Register.Register(self.__accumulator.Value))
-            elif ((mnemonic == 'SUB') or (mnemonic == '---')):
-                self.__accumulator = self.Sub(self.__accumulator, self.__storeLines.GetLine(lineNumber))
-            elif (mnemonic == 'CMP'):
-                if (self.__accumulator.Value & 0x1):
-                    self.IncrementCI()
-            elif (mnemonic == 'STOP'):
-                running = False
-            else:
-                raise ValueError
-            if (running and debugging):
-                self.Print()
-                command = raw_input()
-                if (command == 'stop'): return
-        self.Print()
-        print('Executed {} instruction(s)'.format(instructionCount))
+#------------------------------------------------------------------------------
+#
+#                               Tests.
+#
+#------------------------------------------------------------------------------
 
 #
 #   Main program loop implementing tests for the CPU class.  The loop only executes
@@ -187,8 +254,10 @@ if (__name__ == '__main__'):
     for i in instructions:
         if (i['opcode'] != cpu.ReverseBits(i['instruction']['twoComplementOpCode'], 3)):
             raise ValueError
-#    if (cpu.Instruction(sl.GetLine(0).Value) != 0b100): raise ValueError
-#    if (cpu.LineNumber(sl.GetLine(0).Value != 0b1000)): raise ValueError
+    # if (cpu.Instruction(sl.GetLine(0).Value) != 0b100):
+    #    raise ValueError
+    # if (cpu.LineNumber(sl.GetLine(0).Value != 0b1000)):
+    #    raise ValueError
     #                                  00000000001111111111222222222233
     #                                  01234567890123456789012345678901
     sl.SetLine(1, Register.Register(0b11001000000000010000000000000000))
@@ -197,5 +266,5 @@ if (__name__ == '__main__'):
     sl.SetLine(4, Register.Register(0b00000000000001110000000000000000))
     sl.SetLine(10, Register.Register(0b00000000000000000000000000000000))
     sl.SetLine(19, Register.Register(0b11001000000000000000000000000000))
-    cpu.RunProgram()
+    # cpu.RunProgram()
     print('CPU tests completed successfully.')
