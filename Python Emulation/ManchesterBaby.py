@@ -1,119 +1,112 @@
 #!/usr/bin/env python
 #
-#   Manchester Baby simulator
+#   Class implementing the Manchester Baby controller for a console.
 #
 import Register
 import StoreLines
 import CPU
+import Instructions
 
-#   Dictionary containing the instruction set, the associated 'mnemonic' and the 'description' of the instruction.
-#
-#   Instructions are stored in a list with each entry being a dictionary item.  The dictionary item contains the
-#   SSEM opcode for instruction along with information about the instruction:
-#
-#   { mnemonic: code, instruction: details }
-#
-#   The instruction detail is a dictionary item containing the following items:
-#       Opcode
-#       English description of the purpose of the instruction.
-#
-instructions = [
-    { 'mnemonic': 'JMP', 'opcode': 0, 'description': 'Copy the contents of store line to CI' },
-    { 'mnemonic': 'JRP', 'opcode': 1, 'description': 'Add the content of the store line to CI' },
-    { 'mnemonic': 'JPR', 'opcode': 1, 'description': 'Add the content of the store line to CI' },
-    { 'mnemonic': 'JMR', 'opcode': 1, 'description': 'Add the content of the store line to CI' },
-    { 'mnemonic': 'LDN', 'opcode': 2, 'description': 'Copy the content of the store line, negated, into the Accumulator' },
-    { 'mnemonic': 'STO', 'opcode': 3, 'description': 'Copy the contents of the Accumulator to the store line' },
-    { 'mnemonic': 'SUB', 'opcode': 4, 'description': 'Subtract the contents of the store line from the Accumulator' },
-    { 'mnemonic': 'CMP', 'opcode': 6, 'description': 'Skip the next instruction if the content of the Accumulator is negative' },
-    { 'mnemonic': 'SKN', 'opcode': 6, 'description': 'Skip the next instruction if the content of the Accumulator is negative' },
-    { 'mnemonic': 'STOP', 'opcode': 7, 'description': 'Light the stop light and halt the machine' },
-    { 'mnemonic': 'HLT', 'opcode': 7, 'description': 'Light the stop light and halt the machine' },
-    { 'mnemonic': 'STP', 'opcode': 7, 'description': 'Light the stop light and halt the machine' }
-    ]
+class ManchesterBaby:
+    def __init__(self):
+        '''Constructor'''
+        self.__instructions = Instructions.Instructions()
+        self.__cpu = None
 
-def ReverseBits(value, bitCount = 32):
-    '''Reverse the bits in the specified value.  This method provides the CPU
-    with the ability to translate SSEM numbers into conventional twos complement
-    numbers used in modern computers.
+    def PrintStoreLines(self):
+        '''Print the contents of the store lines along with the disassembly.'''
+        print('                 00000000001111111111222222222233')
+        print('                 01234567890123456789012345678901')
+        for lineNumber in range(self.__cpu.StoreLines.Length):
+            line = self.__cpu.StoreLines.GetLine(lineNumber)
+            decimal = line.Value
+            if (decimal & 0x80000000):
+                decimal -= 2**32
+            print('{:02}: {} - {} {:16} ; {}'.format(lineNumber, line.Hex(), line.Binary(), self.Disassembly(line), decimal))
 
-    SSEM numbers are twos complement numbers with the LSB and MSB reversed
-    compared to conventional twos complement form.'''
-    result = 0
-    while (bitCount > 0):
-        result <<= 1
-        if (value & 1):
-            result |= 1
-        value >>= 1
-        bitCount -= 1
-    return(result)
+    def PrintRegisters(self):
+        '''Display the contents of the registers.'''
+        print('AC: {} - {} {}'.format(self.__cpu.Accumulator.Hex(), self.__cpu.Accumulator.Binary(), self.__cpu.Accumulator.ReverseBits()))
+        print('CI: {} - {} {}'.format(self.__cpu.CI.Hex(), self.__cpu.CI.Binary(), self.__cpu.CI.Value))
+        print('PI: {} - {} {}'.format(self.__cpu.PI.Hex(), self.__cpu.PI.Binary(), self.Disassembly(self.__cpu.PI)))
 
-def Instruction(name):
-    '''Look up the mnemonic to obtain the instruction information.
-    '''
-    i = [element for element in instructions if element['mnemonic'] == name]
-    if (len(i) != 1):
-        result = None
-    else:
-        result = i[0]
-    return result
+    def Print(self):
+        '''Print a readable version of the internal state of the CPU.'''
+        print('\n--------------- SSEM Machine State ---------------\n')
+        self.PrintStoreLines()
+        print('')
+        self.PrintRegisters()
 
-def Assembler(fileName, storeLines):
-    '''Open the specified file and convert the assembler instructions into
-    binary and save into the storeLines.'''
-    with open(fileName, "r") as source:
-        lineNumber = 0
-        for line in source:
-            lineNumber += 1
-            words = line.rstrip('\n').split()
-            if (words[0] != '--'):
-                sl = int(words[0].strip(':'))
-                m = words[1].upper()
-                if (m == 'NUM'):
-                    store = ReverseBits(int(words[2]))
-                else:
-                    #
-                    #   The instruction below will work with python on computer but not with CircuitPython.
-                    #
-                    # i = next((i for i, x in enumerate(instructions) if (x['mnemonic'] == m)), None)
-                    #
-                    #   The instruction below works with both python on a computer and with CircuitPython.
-                    #
-                    i = Instruction(m)
-                    if (i == None):
-                        print('Cannot process line {}: {}'.format(lineNumber, line))
-                        exit()
+    def DecodeInstruction(self, register):
+        '''Decode the instruction in the specified register object.
+
+        Returns the mnemonic and the store line number to be operated on.'''
+        opcode = self.__instructions.Opcode(register.Value)
+        lineNumber = self.__instructions.LineNumber(register.Value)
+        instruction = self.__instructions.Mnemonic(opcode)
+        return(self.__instructions.Mnemonic(opcode), lineNumber)
+
+    def Disassembly(self, register):
+        '''Disassemble the instruction in the specified register.'''
+        mnemonic, lineNumber = self.DecodeInstruction(register)
+        if ((mnemonic == 'STOP') or (mnemonic == 'CMP')):
+            instruction = mnemonic
+        else:
+            instruction = '{} {}'.format(mnemonic, lineNumber)
+        return(instruction)
+
+    def Assembler(self, fileName):
+        '''Open the specified file and convert the assembler instructions into
+        binary and save into the storeLines.'''
+        with open(fileName, "r") as source:
+            lineNumber = 0
+            storeLines = StoreLines.StoreLines(32)
+            for line in source:
+                lineNumber += 1
+                words = line.rstrip('\n').split()
+                if (words[0] != '--'):
+                    sl = int(words[0].strip(':'))
+                    m = words[1].upper()
+                    if (m == 'NUM'):
+                        store = int(words[2])
                     else:
-                        opcode = i['opcode']
-                        if (m in ['STOP', 'HLT', 'CMP', 'SKN']):
-                            ln = 0
+                        i = self.__instructions.Lookup(m)
+                        if (i == None):
+                            print('Cannot process line {}: {}'.format(lineNumber, line))
+                            exit()
                         else:
-                            ln = int(words[2])
-                        store = ReverseBits(ln | (opcode << 13))
-                storeLines.SetLine(sl, Register.Register(store))
+                            opcode = i[0]['opcode']
+                            if (m in ['STOP', 'HLT', 'CMP', 'SKN']):
+                                ln = 0
+                            else:
+                                ln = int(words[2])
+                            store = ln | (opcode << 13)
+                    storeLines.SetLine(sl, Register.Register(store))
+            self.__cpu = CPU.CPU(storeLines)
 
-def RunProgram(cpu, debugging = False):
-    '''Run the program contained in the store.'''
-    cpu.Reset()
-    instructionCount = 0
-    cpu.Stopped = False
-    print('\nExecuting program:')
-    while (cpu.Stopped == False):
-        cpu.SingleStep()
-        instructionCount = instructionCount + 1
-        # if (debugging):
-        #     self.Print()
-        #     command = raw_input()
-        #     if (command == 'stop'): return
-    cpu.Print()
-    print('Executed {} instruction(s)'.format(instructionCount))
+    def RunProgram(self, debugging = False):
+        '''Run the program contained in the store.'''
+        if (self.__cpu.StoreLines == None):
+            raise RuntimeError
+        self.__cpu.Reset()
+        instructionCount = 0
+        self.__cpu.Stopped = False
+        print('\nExecuting program:')
+        while (self.__cpu.Stopped == False):
+            self.__cpu.SingleStep()
+            instructionCount = instructionCount + 1
+            # if (debugging):
+            #     self.Print()
+            #     command = raw_input()
+            #     if (command == 'stop'): return
+        print('Executed {} instruction(s)'.format(instructionCount))
 
 #
 #   The Manchester Baby
 #
 if (__name__ == '__main__'):
-    storeLines = StoreLines.StoreLines(32)
-    Assembler('Samples/hfr989.asm', storeLines)
-    cpu = CPU.CPU(storeLines)
-    RunProgram(cpu, debugging = False)
-    # cpu.RunProgram(debugging = False)
+    baby = ManchesterBaby()
+    baby.Assembler('Samples/hfr989.asm')
+    baby.Print()
+    baby.RunProgram(debugging = False)
+    baby.Print()
