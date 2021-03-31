@@ -58,6 +58,13 @@ class StoreLines:
         else:
             raise IndexError
 
+    def Clear(self):
+        '''Clear the contents of the store lines.
+        
+        This will set all of the store lines to 0.'''
+        for lineNumber in range(len(self.__storeLines)):
+            self.__storeLines[lineNumber] = Register.Register(0)
+
 #------------------------------------------------------------------------------
 #
 #                               Tests.
@@ -66,10 +73,13 @@ class StoreLines:
 
 if (__name__ == '__main__'):
     sl = StoreLines()
-    if (sl.Length != 32): raise ValueError
+    if (sl.Length != 32):
+        raise ValueError
     sl = StoreLines(100)
-    if (sl.Length != 100): raise ValueError
-    if (sl.GetLine(0).Value != 0): raise ValueError
+    if (sl.Length != 100):
+        raise ValueError
+    if (sl.GetLine(0).Value != 0):
+        raise ValueError
     sl.SetLine(0, 1)
     if (sl.GetLine(0) != 1):
         raise ValueError
@@ -89,4 +99,8 @@ if (__name__ == '__main__'):
         sl.GetLine(500)
     except IndexError:
         pass
-    print('StoreLines tests completed successfully.')
+    sl.Clear()
+    for lineNumber in range(sl.Length):
+        if (sl.GetLine(lineNumber).Value != 0):
+            raise ValueError
+    print('StoreLines tests pass')

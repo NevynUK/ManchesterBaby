@@ -29,9 +29,9 @@ class Register:
     def __SetValue(self, value):
         '''Set the register to the new value, note that the value must be positive
         and less than 0x100000000'''
-        if ((value < 0) or (value > 0xffffffff)):
-            raise ValueError
-        self.__value = value
+        # if ((value < 0) or (value > 0xffffffff)):
+        #     raise ValueError
+        self.__value = value & 0xffffffff
 
     Value = property(__GetValue, __SetValue, None, None)
 
@@ -46,7 +46,26 @@ class Register:
 
     def Binary(self):
         '''Return a binary representation of the register without the leading 0b prefix.'''
-        return('{0:#034b}'.format(self.Value)[2:])
+        v = self.ReverseBits()
+        str = '{0:#034b}'.format(v)
+        return(str[2:])
+
+    def ReverseBits(self):
+        '''Reverse the bits in the specified value.  This method provides the CPU
+        with the ability to translate conventional twos complement into SSEM numbers.
+
+        SSEM numbers are twos complement numbers with the LSB and MSB reversed
+        compared to conventional twos complement form.'''
+        result = 0
+        value = self.Value
+        bitCount = 32
+        while (bitCount > 0):
+            result <<= 1
+            if (value & 1):
+                result |= 1
+            value >>= 1
+            bitCount -= 1
+        return(result)
 
 #------------------------------------------------------------------------------
 #
@@ -59,9 +78,11 @@ class Register:
 #
 if (__name__ == '__main__'):
     reg = Register()
-    if (reg.Value != 0): raise ValueError
+    if (reg.Value != 0):
+        raise ValueError
     reg.Value = 200
-    if (reg.Value != 200): raise ValueError
+    if (reg.Value != 200):
+        raise ValueError
     try:
         reg.Value = -1
     except ValueError:
@@ -71,6 +92,10 @@ if (__name__ == '__main__'):
     except ValueError:
         pass
     reg.Value = 0x1f1f
-    if (reg.Hex() != '0x00001f1f'): raise ValueError
-    if (reg.Binary() != '00000000000000000001111100011111'): raise ValueError
+    if (reg.Hex() != '0x00001f1f'):
+        raise ValueError
+    if (reg.Binary() != '00000000000000000001111100011111'):
+        raise ValueError
+    if (reg.ReverseBits() != 0xf8f80000): 
+        raise ValueError
     print('Register tests completed successfully.')
