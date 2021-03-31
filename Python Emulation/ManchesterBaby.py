@@ -2,15 +2,15 @@
 #
 #   Class implementing the Manchester Baby controller for a console.
 #
-import Register
-import StoreLines
-import CPU
-import Instructions
+from Register import Register
+from StoreLines import StoreLines
+from CPU import CPU
+from Instructions import Instructions
 
 class ManchesterBaby:
     def __init__(self):
         '''Constructor'''
-        self.__instructions = Instructions.Instructions()
+        self.__instructions = Instructions()
         self.__cpu = None
 
     def PrintStoreLines(self):
@@ -60,7 +60,7 @@ class ManchesterBaby:
         binary and save into the storeLines.'''
         with open(fileName, "r") as source:
             lineNumber = 0
-            storeLines = StoreLines.StoreLines(32)
+            storeLines = StoreLines(32)
             for line in source:
                 lineNumber += 1
                 words = line.rstrip('\n').split()
@@ -81,8 +81,8 @@ class ManchesterBaby:
                             else:
                                 ln = int(words[2])
                             store = ln | (opcode << 13)
-                    storeLines.SetLine(sl, Register.Register(store))
-            self.__cpu = CPU.CPU(storeLines)
+                    storeLines.SetLine(sl, Register(store))
+            self.__cpu = CPU(storeLines)
 
     def RunProgram(self, debugging = False):
         '''Run the program contained in the store.'''
@@ -105,8 +105,12 @@ class ManchesterBaby:
 #   The Manchester Baby
 #
 if (__name__ == '__main__'):
+    import time
     baby = ManchesterBaby()
     baby.Assembler('Samples/hfr989.asm')
     baby.Print()
+    start = time.monotonic()
     baby.RunProgram(debugging = False)
+    end = time.monotonic()
     baby.Print()
+    print('Execution time: {} seconds'.format(end-start))

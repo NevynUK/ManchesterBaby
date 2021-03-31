@@ -1,5 +1,7 @@
-import Register
-
+#!/usr/bin/env python
+#
+#   Class implementing holding the methods that describe instructions for the Manchester Baby.
+#
 class Instructions:
     '''Implement the methods and provide constants for the instructions that can
     be held in the SSEM.'''
@@ -100,9 +102,9 @@ class Instructions:
 
     def Mnemonic(self, value):
         '''Get the mnemonic for the instruction with the given opcode.'''
-        if ((value < 0) or (value >= len(self.__instructions))):
-            raise ValueError
         i = [element for element in self.__instructions if element['instruction']['twoComplementOpCode'] == value]
+        if (len(i) == 0):
+            raise ValueError
         return(i[0]['instruction']['mnemonic'])
 
     def LineNumber(self, value):
