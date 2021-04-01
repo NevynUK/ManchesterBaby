@@ -94,8 +94,8 @@ if (__name__ == '__main__'):
     reg.Value = 0x1f1f
     if (reg.Hex() != '0x00001f1f'):
         raise ValueError
-    if (reg.Binary() != '11111000111110000000000000000000'):
+    if (reg.Binary() != '00000000000000000001111100011111'):
         raise ValueError
     if (reg.ReverseBits() != 0xf8f80000): 
         raise ValueError
-    print('Register tests pass')
+    print('Register tests completed successfully.')
