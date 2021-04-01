@@ -2,7 +2,7 @@
 #
 #   Class implementing the store lines for the Manchester Baby.
 #
-from Register import Register
+import Register
 
 #
 #   Arbitrary maximum number of lines in the store.  The SSEM has 32 store lines
@@ -24,7 +24,7 @@ class StoreLines:
         '''Construct a new StoreLines object with the specified number of lines
         in the store.  The default number of lines is 32, the same as the SSEM.'''
         if ((size > 0) and (size < MAX_STORE_SIZE)):
-            self.__storeLines = [Register() for x in range(size)]
+            self.__storeLines = [Register.Register() for x in range(size)]
         else:
             raise ValueError
 
@@ -63,7 +63,7 @@ class StoreLines:
         
         This will set all of the store lines to 0.'''
         for lineNumber in range(len(self.__storeLines)):
-            self.__storeLines[lineNumber] = Register(0)
+            self.__storeLines[lineNumber] = Register.Register(0)
 
 #------------------------------------------------------------------------------
 #

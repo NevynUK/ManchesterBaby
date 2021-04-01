@@ -2,15 +2,15 @@
 #
 #   Class implementing the Manchester Baby controller for a console.
 #
-from Register import Register
-from StoreLines import StoreLines
-from CPU import CPU
-from Instructions import Instructions
+import Register
+import StoreLines
+import CPU
+import Instructions
 
 class ManchesterBaby:
     def __init__(self):
         '''Constructor'''
-        self.__instructions = Instructions()
+        self.__instructions = Instructions.Instructions()
         self.__cpu = None
 
     def PrintStoreLines(self):
@@ -60,7 +60,7 @@ class ManchesterBaby:
         binary and save into the storeLines.'''
         with open(fileName, "r") as source:
             lineNumber = 0
-            storeLines = StoreLines(32)
+            storeLines = StoreLines.StoreLines(32)
             for line in source:
                 lineNumber += 1
                 words = line.rstrip('\n').split()
@@ -81,36 +81,38 @@ class ManchesterBaby:
                             else:
                                 ln = int(words[2])
                             store = ln | (opcode << 13)
-                    storeLines.SetLine(sl, Register(store))
-            self.__cpu = CPU(storeLines)
+                    storeLines.SetLine(sl, Register.Register(store))
+            self.__cpu = CPU.CPU(storeLines)
 
-    def RunProgram(self, debugging = False):
+    def RunProgram(self, debugging = False, progress = None, updateDisplayTube = None):
         '''Run the program contained in the store.'''
         if (self.__cpu.StoreLines == None):
             raise RuntimeError
         self.__cpu.Reset()
         instructionCount = 0
         self.__cpu.Stopped = False
+        if (updateDisplayTube != None):
+            updateDisplayTube(self.__cpu.StoreLines)
         print('\nExecuting program:')
         while (self.__cpu.Stopped == False):
             self.__cpu.SingleStep()
             instructionCount = instructionCount + 1
+            if (((instructionCount % 1000) == 0) and (progress != None)):
+                progress(instructionCount)
+            if ((self.__cpu.UpdateDisplayTube) and (updateDisplayTube != None)):
+                updateDisplayTube(self.__cpu.StoreLines)
             # if (debugging):
             #     self.Print()
             #     command = raw_input()
             #     if (command == 'stop'): return
-        print('Executed {} instruction(s)'.format(instructionCount))
+        return(instructionCount)
 
 #
 #   The Manchester Baby
 #
 if (__name__ == '__main__'):
-    import time
     baby = ManchesterBaby()
     baby.Assembler('Samples/hfr989.asm')
     baby.Print()
-    start = time.monotonic()
     baby.RunProgram(debugging = False)
-    end = time.monotonic()
     baby.Print()
-    print('Execution time: {} seconds'.format(end-start))
