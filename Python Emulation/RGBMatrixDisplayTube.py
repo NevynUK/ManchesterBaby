@@ -17,7 +17,7 @@ class RGBMatrixDisplayTube:
         # code. If you just want to show primary colors plus black and white, use 1.
         # Otherwise, try 3, 4 and 5 to see which effect you like best.
         self.__matrix = rgbmatrix.RGBMatrix(
-            width = 32, height = 32, bit_depth = 1,
+            width = 32, height = 32, bit_depth = 2,
             # Pin sequence: R0, G0, B0, R1, G1, B1
             rgb_pins=[board.GP4, board.GP21, board.GP5, board.GP6, board.GP20, board.GP7],
             addr_pins=[board.GP8, board.GP19, board.GP9, board.GP18],
@@ -35,7 +35,7 @@ class RGBMatrixDisplayTube:
         self.__grid2 = displayio.Group(max_size = 3, scale = 1)
         self.__grid2.append(self.__tg2)        
         self.__palette[0] = 0
-        self.__palette[1] = 0x00ff00
+        self.__palette[1] = 0x004000
         self.__display.auto_refresh = True
 
     def Clear(self):
@@ -62,7 +62,7 @@ class RGBMatrixDisplayTube:
         buffer = self.__buffers[self.__currentBuffer]
         for line in range(storeLines.Length):
             v = storeLines.GetLine(line).Value
-            for bit in range(31):
+            for bit in range(32):
                 buffer[(line * 32) + bit] = (v >> bit) & 0x01
         self.__display.show(grid)
 
