@@ -26,6 +26,7 @@ class RGBMatrixDisplayTube:
         self.__display = framebufferio.FramebufferDisplay(self.__matrix, auto_refresh=False)
         self.__currentBuffer = 0
         self.__buffers = [displayio.Bitmap(self.__display.width, self.__display.height, 2), displayio.Bitmap(self.__display.width, self.__display.height, 2)]
+        self.Clear()
         self.__palette = displayio.Palette(2)
         self.__tg1 = displayio.TileGrid(self.__buffers[0], pixel_shader = self.__palette)
         self.__tg2 = displayio.TileGrid(self.__buffers[1], pixel_shader = self.__palette)
