@@ -1,59 +1,42 @@
+#
+#   System and external libraries.
+#
 import time
 import board
 import busio
 from digitalio import DigitalInOut, Direction, Pull
-import adafruit_character_lcd.character_lcd_spi as character_lcd
 
+#
+#   Project libraries.
+#
 from RGBMatrixDisplayTube import RGBMatrixDisplayTube
-
 from ManchesterBaby import ManchesterBaby
-
-def ProgressUpdate(lineCount):
-    message ='  Manchester Baby\n\nExec: hfr989.asm\nLines: {}'.format(lineCount)
-    lcd.clear()
-    lcd.message = message
-
-lcd_columns = 20
-lcd_rows = 4
-
-clk = board.GP2
-data = board.GP3
-latch = board.GP1
-
-spi = busio.SPI(clk, MOSI = data, MISO = None)
-latch = DigitalInOut(latch)
-lcd = character_lcd.Character_LCD_SPI(spi, latch, lcd_columns, lcd_rows)
-
-lcd.message = '  Manchester Baby\n\n     Pico 2040'
-
-runLed = DigitalInOut(board.GP27)
-runLed.direction = Direction.OUTPUT
-runLed.value = True
-
-stopLed = DigitalInOut(board.GP26)
-stopLed.direction = Direction.OUTPUT
-stopLed.value = False
+from UserInterface import UserInterface
 
 displayTube = RGBMatrixDisplayTube()
-baby = ManchesterBaby()
-baby.Assembler('Samples/hfr989.asm')
-baby.Print()
-start = time.monotonic()
-stopLed.value = True
-runLed.value = False
-message ='  Manchester Baby\n\nExec: hfr989.asm'
-lcd.clear()
-lcd.message = message
-instructionCount = baby.RunProgram(debugging = False, progress = ProgressUpdate, updateDisplayTube  = displayTube.Show)
-runLed.value = True
-stopLed.value = False
-end = time.monotonic()
+ui = None
+exec_message = None
 
-message ='  Manchester Baby\nExec: hfr989.asm\nLines: {}\nTime: {} sec'.format(instructionCount, end - start)
-lcd.clear()
-lcd.message = message
+def ProgressUpdate(lineCount):
+    ui.UpdateLCD('', exec_message, 'Lines: {}'.format(lineCount))
 
-baby.Print()
+ui = UserInterface()
+time.sleep(2.0)
+ui.SelectFile()
+
+if (ui.FileName is not None):
+    baby = ManchesterBaby()
+    baby.Assembler('Sources/' + ui.FileName)
+    baby.Print()
+    exec_message = 'Exec: ' + ui.FileName
+    ui.UpdateLCD('', exec_message, '')
+    start = time.monotonic()
+    instructionCount = baby.RunProgram(debugging = False, progress = ProgressUpdate, updateDisplayTube  = displayTube.Show)
+    end = time.monotonic()
+    lines_message = 'Lines: {}'.format(instructionCount)
+    time_message = 'Time: {}'.format(end - start)
+    ui.UpdateLCD(exec_message, lines_message, time_message)
+    baby.Print()
 
 while (True):
     pass
