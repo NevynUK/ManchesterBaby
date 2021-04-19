@@ -24,6 +24,11 @@ ui = UserInterface()
 time.sleep(2.0)
 ui.SelectFile()
 
+# print('Updating the UI')
+# while (True):
+#     ui.Update()
+#     time.sleep(0.01)
+
 if (ui.FileName is not None):
     baby = ManchesterBaby()
     baby.Assembler('Sources/' + ui.FileName)
