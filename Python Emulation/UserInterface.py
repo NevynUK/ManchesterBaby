@@ -2,7 +2,7 @@ import board
 import busio
 import rotaryio
 import os
-from digitalio import DigitalInOut, Direction, Pull
+
 import adafruit_character_lcd.character_lcd_i2c as character_lcd
 
 
@@ -31,13 +31,25 @@ class UserInterface:
         self.__stopLed.direction = Direction.OUTPUT
         self.__stopLed.value = False
 
+        self.__haltLed = DigitalInOut(board.GP2)
+        self.__haltLed.direction = Direction.OUTPUT
+        self.__haltLed.value = False
+
+        self.__singleStepLed = DigitalInOut(board.GP28)
+        self.__singleStepLed.direction = Direction.OUTPUT
+        self.__singleStepLed.value = False
+
         self.__runStopSwitch = DigitalInOut(board.GP14)
         self.__runStopSwitch.direction = Direction.INPUT
         self.__runStopSwitch.pull = Pull.UP
 
-        self.__singleStepSelectionSwitch = DigitalInOut(board.GP13)
+        self.__singleStepSelectionSwitch = DigitalInOut(board.GP3)
         self.__singleStepSelectionSwitch.direction = Direction.INPUT
         self.__singleStepSelectionSwitch.pull = Pull.DOWN
+
+        self.__singleStepSwitch = DigitalInOut(board.GP14)
+        self.__singleStepSwitch.direction = Direction.INPUT
+        self.__singleStepSwitch.pull = Pull.DOWN
 
         self.__encoderButton = DigitalInOut(board.GP15)
         self.__encoderButton.direction = Direction.INPUT
@@ -98,7 +110,6 @@ class UserInterface:
         else:
             self.__runLed.value = True
             self.__stopLed.value = False
-
 
     def SelectFile(self):
         '''Select a source file from the .ssem files in the Sources directory.'''
