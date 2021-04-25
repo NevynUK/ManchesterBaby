@@ -16,27 +16,32 @@ class ManchesterBaby:
 #                       Class construction.
 #
 #------------------------------------------------------------------------------
-    def __init__(self, userInterface):
+    def __init__(self, userInterface = None):
         '''Construct a new ManchesterBaby (SSEM) object.
         
         @param: userInterface Class implementing the methods that will allow interaction with the user.'''
         self._instructions = Instructions()
         self._cpu = None
-        method = getattr(userInterface, 'UpdateDisplayTube', None)
-        if (callable(method)):
-            self._uiUpdateDisplay = method
-        else:
+        if (userInterface == None):
             self._uiUpdateDisplay = None
-        method = getattr(userInterface, 'UpdateProgress', None)
-        if (callable(method)):
-            self._uiUpdateProgress = method
-        else:
             self._uiUpdateProgress = None
-        method = getattr(userInterface, 'DisplayError', None)
-        if (callable(method)):
-            self._uiDisplayError = method
-        else:
             self._uiDisplayError = None
+        else:
+            method = getattr(userInterface, 'UpdateDisplayTube', None)
+            if (callable(method)):
+                self._uiUpdateDisplay = method
+            else:
+                self._uiUpdateDisplay = None
+            method = getattr(userInterface, 'UpdateProgress', None)
+            if (callable(method)):
+                self._uiUpdateProgress = method
+            else:
+                self._uiUpdateProgress = None
+            method = getattr(userInterface, 'DisplayError', None)
+            if (callable(method)):
+                self._uiDisplayError = method
+            else:
+                self._uiDisplayError = None
 
 #------------------------------------------------------------------------------
 #
@@ -130,8 +135,7 @@ class ManchesterBaby:
 #
 #------------------------------------------------------------------------------
 if (__name__ == '__main__'):
-    ui = ConsoleUserInterface()
-    baby = ManchesterBaby(ui)
+    baby = ManchesterBaby()
     baby.Assembler('Sources/hfr989.ssem')
     baby.Print()
     baby.RunProgram(debugging = False)
