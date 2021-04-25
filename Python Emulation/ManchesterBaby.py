@@ -2,9 +2,9 @@
 #
 #   Class implementing the Manchester Baby controller for a console.
 #
-import Register
-import StoreLines
-import CPU
+from Register import Register
+from StoreLines import StoreLines
+from CPU import CPU
 from Instructions import Instructions
 from ConsoleUserInterface import ConsoleUserInterface
 
@@ -72,7 +72,7 @@ class ManchesterBaby:
         '''
         with open(fileName, "r") as source:
             lineNumber = 0
-            storeLines = StoreLines.StoreLines(32)
+            storeLines = StoreLines(32)
             for line in source:
                 lineNumber += 1
                 words = line.rstrip('\n').split()
@@ -103,8 +103,8 @@ class ManchesterBaby:
                             else:
                                 ln = int(words[2])
                             store = ln | (opcode << 13)
-                    storeLines.SetLine(sl, Register.Register(store))
-            self._cpu = CPU.CPU(storeLines)
+                    storeLines.SetLine(sl, Register(store))
+            self._cpu = CPU(storeLines)
 
     def RunProgram(self, debugging = False):
         '''Run the program contained in the store.'''
