@@ -69,6 +69,16 @@ class ManchesterBaby:
                     m = words[1].upper()
                     if (m == 'NUM'):
                         store = int(words[2])
+                    elif  ((m == "BIN") or (m == "BINS")):
+                        value = int(words[2], 2)
+                        store = 0
+                        bitCount = 32
+                        while (bitCount > 0):
+                            store <<= 1
+                            if (value & 1):
+                                store |= 1
+                            value >>= 1
+                            bitCount -= 1
                     else:
                         i = self.__instructions.Lookup(m)
                         if (i == None):
@@ -112,7 +122,7 @@ class ManchesterBaby:
 #
 if (__name__ == '__main__'):
     baby = ManchesterBaby()
-    baby.Assembler('Samples/hfr989.asm')
+    baby.Assembler('Sources/Clock.ssem')
     baby.Print()
     baby.RunProgram(debugging = False)
     baby.Print()
