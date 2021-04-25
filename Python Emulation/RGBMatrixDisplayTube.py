@@ -44,15 +44,6 @@ class RGBMatrixDisplayTube:
         for index in range(self.__buffers[self.__currentBuffer].width * self.__buffers[self.__currentBuffer].height):
             self.__buffers[self.__currentBuffer][index] = 0
 
-    def Walk(self):
-        for pixel in range(64):
-            if ((pixel % 2) == 0):
-                self.__buffers[0][pixel] = 1
-            else:
-                self.__buffers[0][pixel] = 0
-            self.__display.show(self.__grid1)
-            time.sleep(1)
-
     def Show(self, storeLines):
         if (self.__currentBuffer == 0):
             self.__currentBuffer = 1
