@@ -1,5 +1,7 @@
-import Register
-
+#!/usr/bin/env python
+#
+#   Class implementing the a register for the Manchester Baby.
+#
 class Instructions:
     '''Implement the methods and provide constants for the instructions that can
     be held in the SSEM.'''
@@ -24,7 +26,7 @@ class Instructions:
         #       mnemonic
         #       English description of the purpose of the instruction.
         #
-        self.__instructions = [
+        self._instructions = [
             { 'opcode': 0, 'instruction': { 'twoComplementOpCode': self.OPCODE_JMP, 'mnemonic': 'JMP', 'description': 'Copy the contents of store line to CI' }},
             { 'opcode': 1, 'instruction': { 'twoComplementOpCode': self.OPCODE_JRP, 'mnemonic': 'JPR', 'description': 'Add the content of the store line to CI' }},
             { 'opcode': 1, 'instruction': { 'twoComplementOpCode': self.OPCODE_JRP, 'mnemonic': 'JRP', 'description': 'Add the content of the store line to CI' }},
@@ -91,24 +93,61 @@ class Instructions:
 #
 #------------------------------------------------------------------------------
     def Opcode(self, value):
-        '''Extract the opcode from a register value.'''
+        '''Extract the opcode from a register value.
+
+        @param: value Value stored in the Register.
+
+        @returns: Opcode element of the register value.
+        '''
         return((value >> 13) & 0x7)
 
     def Lookup(self, name):
-        '''Lookup an instruction in the list of instructions to get properties.'''
-        i = [element for element in self.__instructions if element['instruction']['mnemonic'] == name]
+        '''Lookup an instruction in the list of instructions to get properties.
+        
+        @param: name Lookup the instruction properties by name.
+        
+        @returns: Instruction properties object.
+        '''
+        i = [element for element in self._instructions if element['instruction']['mnemonic'] == name]
         return(i)
 
-    def Mnemonic(self, value):
-        '''Get the mnemonic for the instruction with the given opcode.'''
-        if ((value < 0) or (value >= len(self.__instructions))):
+    def Mnemonic(self, opcode):
+        '''Get the mnemonic for the instruction with the given opcode.
+
+        @param: opcode Opcode to look up and be decoded.
+        
+        @returns: Printable mnemonic for the opcode.
+        '''
+        if ((opcode < 0) or (opcode >= len(self._instructions))):
             raise ValueError
-        i = [element for element in self.__instructions if element['instruction']['twoComplementOpCode'] == value]
+        i = [element for element in self._instructions if element['instruction']['twoComplementOpCode'] == opcode]
         return(i[0]['instruction']['mnemonic'])
 
     def LineNumber(self, value):
-        '''Extract the line number from a register value.'''
+        '''Extract the line number from a register value.
+        
+        @param: value Register value to be decoded.
+
+        @returns: Line number from the register value.
+        '''
         return(value  & 0x1f)
+
+    def Disassemble(self, value):
+        '''Disassemble the instruction in the specified register.
+        
+        @param: register Register holding the line to disassemble.
+
+        @returns: Printable version of the register being disassembled.
+        '''
+        lineNumber = self.LineNumber(value)
+        opcode = self.Opcode(value)
+        mnemonic = self.Mnemonic(opcode)
+        if ((mnemonic == 'STOP') or (mnemonic == 'CMP')):
+            instruction = mnemonic
+        else:
+            instruction = '{} {}'.format(mnemonic, lineNumber)
+        return(instruction)
+
 
 #------------------------------------------------------------------------------
 #
@@ -117,21 +156,26 @@ class Instructions:
 #------------------------------------------------------------------------------
 if (__name__ == '__main__'):
     instructions = Instructions()
-    register = 0x0000000f
-    if (instructions.Opcode(register) != instructions.OPCODE_JMP):
+    registerValue = 0x0000000f
+    if (instructions.Opcode(registerValue) != instructions.OPCODE_JMP):
         raise ValueError
-    if (instructions.LineNumber(register != 0xf)):
+    if (instructions.LineNumber(registerValue != 0xf)):
         raise ValueError
     if (instructions.Mnemonic(0) != 'JMP'):
         raise ValueError
     if (instructions.Mnemonic(7) != 'STOP'):
         raise ValueError
+    if (instructions.Disassemble(0b0100000000001010) != "LDN 10"):
+        raise RuntimeError
+    #
+    #   Now test the stuff that should fail and raise exceptins.
+    #
     try:
         instructions.Mnemonic(-1)
     except ValueError:
         pass
     try:
-        instructions.Mnemonic(8)
+        instructions.Mnemonic(14)
     except ValueError:
         pass
 

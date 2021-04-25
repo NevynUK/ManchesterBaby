@@ -8,13 +8,14 @@
 #
 class Register:
     '''Register in the Manchester Baby.'''
+
 #------------------------------------------------------------------------------
 #
 #                       Class construction.
 #
 #------------------------------------------------------------------------------
     def __init__(self, value = 0):
-        '''Create a new register and set the value to 0.'''
+        '''Create a new register and set the value as specified (defaults to 0).'''
         self.Value = value
 
 #------------------------------------------------------------------------------
@@ -22,18 +23,16 @@ class Register:
 #                           Properties.
 #
 #------------------------------------------------------------------------------
-    def __GetValue(self):
-        '''Get the register value.'''
-        return(self.__value)
+    @property
+    def Value(self):
+        '''Register value.'''
+        return(self._value)
 
-    def __SetValue(self, value):
-        '''Set the register to the new value, note that the value must be positive
-        and less than 0x100000000'''
-        # if ((value < 0) or (value > 0xffffffff)):
-        #     raise ValueError
-        self.__value = value & 0xffffffff
+    @Value.setter
+    def Value(self, value):
+        '''Register value.'''
+        self._value = value & 0xffffffff
 
-    Value = property(__GetValue, __SetValue, None, None)
 
 #------------------------------------------------------------------------------
 #
@@ -41,11 +40,17 @@ class Register:
 #
 #------------------------------------------------------------------------------
     def Hex(self):
-        '''Return a hexadecimal representation of the register value.'''
+        '''Return a hexadecimal representation of the register value.
+        
+        @returns: Hexadecimal representation of the register value (this is standard twos compliment version of the value).
+        '''
         return('{0:#010x}'.format(self.Value))
 
     def Binary(self):
-        '''Return a binary representation of the register without the leading 0b prefix.'''
+        '''Return a binary representation of the register without the leading 0b prefix.
+
+        @returns: Binary representation of the register value.  This is the reversed bit version of the register as would be displayed on the Display Tube).
+        '''
         v = self.ReverseBits()
         str = '{0:#034b}'.format(v)
         return(str[2:])
@@ -55,7 +60,10 @@ class Register:
         with the ability to translate conventional twos complement into SSEM numbers.
 
         SSEM numbers are twos complement numbers with the LSB and MSB reversed
-        compared to conventional twos complement form.'''
+        compared to conventional twos complement form.
+        
+        @retuns: Revered bits version of the value in the register.
+        '''
         result = 0
         value = self.Value
         bitCount = 32
@@ -72,10 +80,6 @@ class Register:
 #                               Tests.
 #
 #------------------------------------------------------------------------------
-
-#
-#   Tests for the Register class.
-#
 if (__name__ == '__main__'):
     reg = Register()
     if (reg.Value != 0):
@@ -94,7 +98,8 @@ if (__name__ == '__main__'):
     reg.Value = 0x1f1f
     if (reg.Hex() != '0x00001f1f'):
         raise ValueError
-    if (reg.Binary() != '00000000000000000001111100011111'):
+    if (reg.Binary() != '11111000111110000000000000000000'):
+        print (reg.Binary())
         raise ValueError
     if (reg.ReverseBits() != 0xf8f80000): 
         raise ValueError
