@@ -28,6 +28,7 @@ class Instructions:
             { 'opcode': 0, 'instruction': { 'twoComplementOpCode': self.OPCODE_JMP, 'mnemonic': 'JMP', 'description': 'Copy the contents of store line to CI' }},
             { 'opcode': 1, 'instruction': { 'twoComplementOpCode': self.OPCODE_JRP, 'mnemonic': 'JPR', 'description': 'Add the content of the store line to CI' }},
             { 'opcode': 1, 'instruction': { 'twoComplementOpCode': self.OPCODE_JRP, 'mnemonic': 'JRP', 'description': 'Add the content of the store line to CI' }},
+            { 'opcode': 1, 'instruction': { 'twoComplementOpCode': self.OPCODE_JRP, 'mnemonic': 'JMR', 'description': 'Add the content of the store line to CI' }},
             { 'opcode': 2, 'instruction': { 'twoComplementOpCode': self.OPCODE_LDN, 'mnemonic': 'LDN', 'description': 'Copy the content of the store line, negated, into the Accumulator' }},
             { 'opcode': 3, 'instruction': { 'twoComplementOpCode': self.OPCODE_STO, 'mnemonic': 'STO', 'description': 'Copy the contents of the Accumulator to the store line' }},
             { 'opcode': 4, 'instruction': { 'twoComplementOpCode': self.OPCODE_SUB, 'mnemonic': 'SUB', 'description': 'Subtract the contents of the store line from the Accumulator' }},
