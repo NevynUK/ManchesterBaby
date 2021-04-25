@@ -135,8 +135,12 @@ class ManchesterBaby:
 #
 #------------------------------------------------------------------------------
 if (__name__ == '__main__'):
+    import time
     baby = ManchesterBaby()
     baby.Assembler('Sources/hfr989.ssem')
     baby.Print()
-    baby.RunProgram(debugging = False)
+    start = time.monotonic()
+    instructionCount = baby.RunProgram(debugging = False)
+    end = time.monotonic()
     baby.Print()
+    print('\nExecuted', instructionCount, 'statements in', end-start, 'seconds')
