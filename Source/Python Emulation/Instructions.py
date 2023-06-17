@@ -168,7 +168,7 @@ if (__name__ == '__main__'):
     if (instructions.Disassemble(0b0100000000001010) != "LDN 10"):
         raise RuntimeError
     #
-    #   Now test the stuff that should fail and raise exceptins.
+    #   Now test the stuff that should fail and raise exceptions.
     #
     try:
         instructions.Mnemonic(-1)

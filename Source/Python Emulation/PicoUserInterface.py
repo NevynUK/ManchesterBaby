@@ -130,7 +130,7 @@ class PicoUserInterface:
         pass
 
     def Update(self):
-        '''Update the sataus of the user interface based upon the hardware switches.'''
+        '''Update the status of the user interface based upon the hardware switches.'''
         self._stop = self._runStopSwitch.value
         self._singleStepSelected = self._singleStepSelectionSwitch.value
         if (self._singleStepSelected):

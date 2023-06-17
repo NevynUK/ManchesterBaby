@@ -87,7 +87,7 @@ class CPU:
     #   * When the application is first loaded into the store lines
     #   * When we save a value into the store lines.
     #
-    #   It is assumed that the diplay update is performed by the class controlling
+    #   It is assumed that the display update is performed by the class controlling
     #   the stepping operation so we set this property when we put a new value
     #   into the store lines.
     #

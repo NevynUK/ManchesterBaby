@@ -62,7 +62,7 @@ class Register:
         SSEM numbers are twos complement numbers with the LSB and MSB reversed
         compared to conventional twos complement form.
         
-        @retuns: Revered bits version of the value in the register.
+        @returns: Revered bits version of the value in the register.
         '''
         result = 0
         value = self.Value
