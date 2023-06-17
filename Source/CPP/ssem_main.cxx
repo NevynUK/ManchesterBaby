@@ -5,6 +5,7 @@ using namespace std;
 
 extern bool TestInstructions(Instructions &instructions);
 extern bool TestRegister();
+extern bool TestStoreLines();
 
 void PrintPassOrFail(const string &test_name, bool result)
 {
@@ -25,5 +26,7 @@ int main()
 
     PrintPassOrFail("Instructions", TestInstructions(instructions));
     PrintPassOrFail("Register", TestRegister());
+    PrintPassOrFail("StoreLines", TestStoreLines());
+    
     return(0);
 }
