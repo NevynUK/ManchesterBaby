@@ -1,4 +1,6 @@
 #include <iostream>
+#include <stdexcept>
+
 #include "../Instructions.hxx"
 
 using namespace std;
@@ -100,7 +102,7 @@ bool TestInstructions(Instructions &instructions)
         instructions.GetOpcode("InvalidMnemonic");
         result = false;
     }
-    catch(const invalid_argument &e)
+    catch (const invalid_argument &e)
     {
         result &=true;
     }

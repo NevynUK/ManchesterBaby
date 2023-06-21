@@ -20,7 +20,7 @@ void PrintPassOrFail(const string &test_name, bool result)
     cout << " " << test_name << endl;
 }
 
-int main()
+extern "C" int main()
 {
     Instructions instructions;
 

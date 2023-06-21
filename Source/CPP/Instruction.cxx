@@ -9,7 +9,7 @@
  * @param description Description of the action of the instruction.
  */
 Instruction::Instruction(const std::string &mnemonic, bool preferred_mnemonic,  opcodes_e opcode, const std::string &description) : 
-    _mnemonic(mnemonic), _preferred_mnemonic(preferred_mnemonic), _opcode(opcode), _description(description)
+    _mnemonic(mnemonic), _opcode(opcode), _description(description), _preferred_mnemonic(preferred_mnemonic)
 {
 }
 
