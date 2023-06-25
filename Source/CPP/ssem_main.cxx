@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "Instructions.hxx"
 
 using namespace std;
@@ -11,13 +12,13 @@ void PrintPassOrFail(const string &test_name, bool result)
 {
     if (result == true)
     {
-        cout << "PASS:";
+        printf("PASS:");
     }
     else
     {
-        cout << "FAIL:";
+        printf("FAIL:");
     }
-    cout << " " << test_name << endl;
+    printf(" %s\n", test_name.c_str());
 }
 
 extern "C" int main()
@@ -27,6 +28,6 @@ extern "C" int main()
     PrintPassOrFail("Instructions", TestInstructions(instructions));
     PrintPassOrFail("Register", TestRegister());
     PrintPassOrFail("StoreLines", TestStoreLines());
-    
+
     return(0);
 }

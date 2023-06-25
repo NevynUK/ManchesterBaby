@@ -51,7 +51,7 @@ Instruction::opcodes_e Instructions::GetOpcode(const std::string &mnemonic)
         }
     }
 
-    throw(std::invalid_argument("Invalid mnemonic"));
+    return(Instruction::INVALID);
 }
 
 /**
@@ -62,7 +62,7 @@ Instruction::opcodes_e Instructions::GetOpcode(const std::string &mnemonic)
  * @param opcode Opcode to look up.
  * @return const std::string& The preferred mnemonic for the opcode.
  */
-const std::string &Instructions::GetMnemonic(Instruction::opcodes_e opcode) const
+const char *Instructions::GetMnemonic(Instruction::opcodes_e opcode) const
 {
     for (auto instruction : _instructions)
     {
@@ -72,7 +72,7 @@ const std::string &Instructions::GetMnemonic(Instruction::opcodes_e opcode) cons
         }
     }
 
-    throw(std::out_of_range("Invalid opcode"));
+   return(nullptr);
 }
 
 /**
@@ -81,7 +81,7 @@ const std::string &Instructions::GetMnemonic(Instruction::opcodes_e opcode) cons
  * @param opcode Opcode to look up.
  * @return const std::string& Description of the preferred mnemonic for the specified opcode.
  */
-const std::string &Instructions::GetDescription(Instruction::opcodes_e opcode) const
+const char *Instructions::GetDescription(Instruction::opcodes_e opcode) const
 {
     for (auto instruction : _instructions)
     {
@@ -91,6 +91,6 @@ const std::string &Instructions::GetDescription(Instruction::opcodes_e opcode) c
         }
     }
 
-    throw(std::out_of_range("Invalid opcode"));
+    return(nullptr);
 }
 

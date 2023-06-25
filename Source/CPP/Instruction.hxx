@@ -1,9 +1,9 @@
-#include <string>
+#include <stdlib.h>
 
 class Instruction
 {
     public:
-        enum opcodes_e : int8_t
+        enum opcodes_e : uint8_t
         {
             JMP = 0x00,
             JPR = 0x01,
@@ -16,9 +16,9 @@ class Instruction
         };        
 
     private:
-        std::string _mnemonic;
+        const char *_mnemonic;
         opcodes_e _opcode;
-        std::string _description;
+        const char *_description;
         bool _preferred_mnemonic;
 
     public:
@@ -35,7 +35,7 @@ class Instruction
          * @param opcode Opcode for the instruction.
          * @param description Description of the action of the instruction.
          */
-        Instruction(const std::string &mnemonic, bool preferred_mnemonic, opcodes_e opcode, const std::string &description);
+        Instruction(const char *mnemonic, bool preferred_mnemonic, opcodes_e opcode, const char *description);
 
         /**
          * @brief Destroy the Instruction::Instruction object
@@ -47,7 +47,7 @@ class Instruction
          * 
          * @return const std::string& Mnemonic for this instruction.
          */
-        const std::string &GetMnemonic() const noexcept;
+        const char *GetMnemonic() const noexcept;
 
         /**
          * @brief Get the opcode for this instruction.
@@ -61,7 +61,7 @@ class Instruction
          * 
          * @return const std::string& Description of this instructions action.
          */
-        const std::string &GetDescription() const noexcept;
+        const char *GetDescription() const noexcept;
 
         /**
          * @brief Is this the preferred mnemonic?

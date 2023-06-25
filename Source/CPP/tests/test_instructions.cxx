@@ -18,21 +18,12 @@ bool TestMnemonic(Instructions &instructions, const string &mnemonic, int8_t exp
 {
     bool result = true;
 
-    try
+    int8_t code = instructions.GetOpcode(mnemonic);
+    if (code != expected_opcode)
     {
-        int8_t code = instructions.GetOpcode(mnemonic);
-        if (code != expected_opcode)
-        {
-            cout << "Invalid opcode for " << mnemonic << ", expected " << expected_opcode << ", received " << code << endl;
-            result = false;
-        }
-    }
-    catch (const invalid_argument &e)
-    {
-        cout << "Invalid opcode for " << mnemonic << endl;
+        cout << "Invalid opcode for " << mnemonic << ", expected " << expected_opcode << ", received " << code << endl;
         result = false;
     }
-
     return(result);
 }
 
@@ -49,21 +40,12 @@ bool TestOpcode(const Instructions &instructions, const string &expected_mnemoni
 {
     bool result = true;
 
-    try
+    const char *mn = instructions.GetMnemonic(opcode);
+    if (mn != expected_mnemonic)
     {
-        string mn = instructions.GetMnemonic(opcode);
-        if (mn != expected_mnemonic)
-        {
-            cout << "Invalid mnemonic for " << opcode << ", expected " << expected_mnemonic << ", received " << mn << endl;
-            result = false;
-        }
-    }
-    catch (const invalid_argument &e)
-    {
-        cout << "Invalid mnemonic for " << opcode << endl;
+        cout << "Invalid mnemonic for " << opcode << ", expected " << expected_mnemonic << ", received " << mn << endl;
         result = false;
     }
-
     return(result);
 }
 
@@ -97,15 +79,7 @@ bool TestInstructions(Instructions &instructions)
     //
     //  Now test for an invalid mnemonic.
     //
-    try
-    {
-        instructions.GetOpcode("InvalidMnemonic");
-        result = false;
-    }
-    catch (const invalid_argument &e)
-    {
-        result &=true;
-    }
+    result &= (instructions.GetOpcode("InvalidMnemonic") == Instruction::INVALID);
     
     //
     //  Now get the preferred mnemonics for the opcodes.
@@ -120,15 +94,7 @@ bool TestInstructions(Instructions &instructions)
     //
     // Now test for invalid opcode, we should get an exception.
     //
-    try
-    {
-        instructions.GetMnemonic((Instruction::opcodes_e) 0x08);
-        result = false;
-    }
-    catch (const out_of_range &e)
-    {
-        result &= true;
-    }
+    result &= (instructions.GetMnemonic((Instruction::opcodes_e) 0x08) == nullptr);
 
     return(result);
 }

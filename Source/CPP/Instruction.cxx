@@ -8,7 +8,7 @@
  * @param opcode Opcode for the instruction.
  * @param description Description of the action of the instruction.
  */
-Instruction::Instruction(const std::string &mnemonic, bool preferred_mnemonic,  opcodes_e opcode, const std::string &description) : 
+Instruction::Instruction(const char *mnemonic, bool preferred_mnemonic,  opcodes_e opcode, const char *description) : 
     _mnemonic(mnemonic), _opcode(opcode), _description(description), _preferred_mnemonic(preferred_mnemonic)
 {
 }
@@ -25,7 +25,7 @@ Instruction::~Instruction()
  * 
  * @return const std::string& Mnemonic for this instruction.
  */
-const std::string &Instruction::GetMnemonic() const noexcept
+const char *Instruction::GetMnemonic() const noexcept
 {
     return(_mnemonic);
 }
@@ -45,7 +45,7 @@ Instruction::opcodes_e Instruction::GetOpcode() noexcept
  * 
  * @return const std::string& Description of this instructions action.
  */
-const std::string &Instruction::GetDescription() const noexcept
+const char *Instruction::GetDescription() const noexcept
 {
     return(_description);
 }

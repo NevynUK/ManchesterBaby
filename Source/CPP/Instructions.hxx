@@ -42,7 +42,7 @@ class Instructions
          * @param opcode Opcode to look up.
          * @return const std::string& The preferred mnemonic for the opcode.
          */
-        const std::string &GetMnemonic(Instruction::opcodes_e opcode) const;
+        const char *GetMnemonic(Instruction::opcodes_e opcode) const;
 
         /**
          * @brief Description of the action of the opcode.
@@ -50,5 +50,5 @@ class Instructions
          * @param opcode Opcode to look up.
          * @return const std::string& Description of the preferred mnemonic for the specified opcode.
          */
-        const std::string &GetDescription(Instruction::opcodes_e opcode) const;
+        const char *GetDescription(Instruction::opcodes_e opcode) const;
 };
