@@ -41,7 +41,7 @@ Register &StoreLines::operator[](uint index)
 }
 
 /**
- * @brief Clear all of the store lines without resizing (so sets all to Register(s))
+ * @brief Clear all of the store lines without resizing (so sets all to 0).
  */
 void StoreLines::Clear()
 {

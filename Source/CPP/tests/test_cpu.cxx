@@ -61,7 +61,7 @@ bool TestCpu()
     }
     if (cpu.Accumulator().GetValue() != 10)
     {
-        printf("Accumulator is %u when if should be 10 after LDN 10.\n", cpu.Accumulator().GetValue());
+        printf("Accumulator is %d when if should be 10 after LDN 10.\n", cpu.Accumulator().GetValue());
         return(false);
     }
     //
@@ -87,7 +87,7 @@ bool TestCpu()
         printf("Accumulator is not 1 after STO 12.\n");
         return(false);
     }
-    if (cpu._storeLines[12].GetValue() != 1)
+    if (storeLines[12].GetValue() != 1)
     {
         printf("Store line 12 is not 1 after STO 12.\n");
         return(false);

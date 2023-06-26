@@ -5,7 +5,7 @@ class Cpu
 {
     public:
         Cpu() = delete;
-        explicit Cpu(const StoreLines &storeLines);
+        explicit Cpu(StoreLines &storeLines);
         ~Cpu();
 
         void Reset();
@@ -17,13 +17,11 @@ class Cpu
         Register const &PI() const noexcept;
         Register const &CI() const noexcept;
         Register const &Accumulator() const noexcept;
-        StoreLines _storeLines;
 
     private:
         Register _pi;
         Register _ci;
         Register _accumulator;
-        // StoreLines _storeLines;
-        // Instructions _instructions;
+        StoreLines &_storeLines;
         bool _stopped;
 };
