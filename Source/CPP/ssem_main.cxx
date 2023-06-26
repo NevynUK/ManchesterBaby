@@ -7,6 +7,7 @@ using namespace std;
 extern bool TestInstructions(Instructions &instructions);
 extern bool TestRegister();
 extern bool TestStoreLines();
+extern bool TestCpu();
 
 void PrintPassOrFail(const string &test_name, bool result)
 {
@@ -28,6 +29,7 @@ extern "C" int main()
     PrintPassOrFail("Instructions", TestInstructions(instructions));
     PrintPassOrFail("Register", TestRegister());
     PrintPassOrFail("StoreLines", TestStoreLines());
+    PrintPassOrFail("CPU", TestCpu());
 
     return(0);
 }
