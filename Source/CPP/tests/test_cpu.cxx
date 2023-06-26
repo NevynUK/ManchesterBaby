@@ -134,7 +134,7 @@ bool TestCpu()
     //
     //  Check that store line 12 has been updated.
     //
-    if (storeLines[12].GetValue() != 0xfffffff8)
+    if (storeLines[12].GetValue() != ((int32_t) 0xfffffff8))
     {
         printf("Store line 12 is not 0xfffffff8 after HALT.\n");
         return(false);
