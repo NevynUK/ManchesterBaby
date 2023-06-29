@@ -5,7 +5,7 @@
  * 
  * @param storeLines Store lines containing the code to be run.
  */
-Cpu::Cpu(StoreLines &storeLines) : _storeLines(storeLines), _pi(0), _accumulator(0), _ci(0), _stopped(true)
+Cpu::Cpu(StoreLines &storeLines) : _pi(0), _ci(0),  _accumulator(0), _storeLines(storeLines),_stopped(true)
 {
 }
 
