@@ -61,7 +61,7 @@ bool TestCpu()
     }
     if (cpu.Accumulator().GetValue() != 10)
     {
-        printf("Accumulator is %d when if should be 10 after LDN 10.\n", cpu.Accumulator().GetValue());
+        printf("Accumulator is %ld when if should be 10 after LDN 10.\n", (long) cpu.Accumulator().GetValue());
         return(false);
     }
     //

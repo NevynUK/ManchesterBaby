@@ -48,7 +48,7 @@ bool TestRegister()
     }
 
     register1.SetValue(0x87654321);
-    if (register1.GetValue() != 0x87654321)
+    if (((uint32_t) register1.GetValue()) != 0x87654321)
     {
         return(false);
     }
