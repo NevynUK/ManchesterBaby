@@ -12,7 +12,8 @@ class Instruction
             SUB = 0x04,
             INVALID = 0x05,
             CMP = 0x06,
-            HALT = 0x07
+            HALT = 0x07,
+            UNKNOWN = 0xff
         };        
 
     private:

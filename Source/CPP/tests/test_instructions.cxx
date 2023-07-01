@@ -79,7 +79,7 @@ bool TestInstructions(Instructions &instructions)
     //
     //  Now test for an invalid mnemonic.
     //
-    result &= (instructions.GetOpcode("InvalidMnemonic") == Instruction::INVALID);
+    result &= (instructions.GetOpcode("InvalidMnemonic") == Instruction::UNKNOWN);
     
     //
     //  Now get the preferred mnemonics for the opcodes.

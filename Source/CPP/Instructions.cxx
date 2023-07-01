@@ -51,7 +51,7 @@ Instruction::opcodes_e Instructions::GetOpcode(const std::string &mnemonic)
         }
     }
 
-    return(Instruction::INVALID);
+    return(Instruction::UNKNOWN);
 }
 
 /**
