@@ -5,12 +5,6 @@
  */
 class Register
 {
-    private:
-        /**
-         * @brief Value held in the register.
-         */
-        int32_t _value;
-
     public:
         /**
          * @brief Construct a new Register object
@@ -37,6 +31,11 @@ class Register
          * @param value Value to be stored in the register.
          */
         void SetValue(int32_t value) noexcept;
+
+        /**
+         * @brief Get the value of the current register as a binary string.
+         */
+        char *Binary() const;
 
         /**
          * @brief Add 1 to the register value.
@@ -68,4 +67,19 @@ class Register
          * @brief Negate the value in the register.
          */
         void Negate() noexcept;
+    private:
+        /**
+         * @brief Value held in the register.
+         */
+        int32_t _value;
+
+        /**
+         * @brief Get the register value as SSEM bits.
+         * 
+         * Note that the SSEM has the first bit at the left of the storage and
+         * so we need to reverse the bits when displaying the register contents.
+         * 
+         * @return int32_t SSEM integer representation of the register value.
+         */
+        int32_t ReverseBits() const noexcept;
 };

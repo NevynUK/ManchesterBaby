@@ -81,3 +81,58 @@ void Register::Negate() noexcept
 {
     _value *= -1;
 }
+
+/**
+ * @brief Get the value of the current register as a binary string.
+ * 
+ * Note the caller is responsible for deleting the returned string when it is no longer needed.
+ * 
+ * @return char* Pointer to a new string array containing the binary test.
+ */
+char *Register::Binary() const
+{
+    char *binary = new char[33];
+    int32_t mask = 1;
+    int32_t value = ReverseBits();
+
+    int bitcount = 32;
+    while (bitcount >= 0)
+    {
+        bitcount--;
+        if (value & mask)
+        {
+            binary[bitcount] = '1';
+        }
+        else
+        {
+            binary[bitcount] = '0';
+        }
+        mask <<= 1;
+    }
+    binary[32] = '\0';
+
+    return(binary);
+}
+
+/**
+ * @brief Reverse the bits in the register.
+ * 
+ * @return int32_t _value with the bits reversed.
+ */
+int32_t Register::ReverseBits() const noexcept
+{
+    int32_t result = 0;
+    int32_t value = _value;
+
+    for (int index = 0; index < 32; index++)
+    {
+        result <<= 1;
+        if (value & 1)
+        {
+            result |= 1;
+        }
+        value >>= 1;
+    }
+
+    return(result);
+}
