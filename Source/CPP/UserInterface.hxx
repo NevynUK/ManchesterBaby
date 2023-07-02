@@ -13,7 +13,7 @@ class UserInterface
         ~UserInterface();
 
         virtual void UpdateDisplayTube(StoreLines &storeLines) const  = 0;
-        virtual void UpdateProgress(uint32_t number_of_lines) = 0;
+        virtual void UpdateProgress(uint number_of_lines) = 0;
         virtual void DisplayError(const char *error) = 0;
 
     private:

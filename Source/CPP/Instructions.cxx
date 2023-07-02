@@ -5,22 +5,26 @@
 /**
  * @brief Set up the static data in this class.
  */
-std::vector<Instruction> Instructions::_instructions
+std::vector<Instruction> Instructions::_instructions;
+
+void Instructions::PopulateLookupTable()
 {
-    Instruction("JMP", true, Instruction::JMP, "Copy the contents of store line to CI"),
-    Instruction("JPR", true, Instruction::JPR, "Add the content of the store line to CI"),
-    Instruction("JRP", false, Instruction::JPR, "Add the content of the store line to CI"),
-    Instruction("JMR", false, Instruction::JPR, "Add the content of the store line to CI"),
-    Instruction("LDN", true, Instruction::LDN, "Copy the content of the store line, negated, into the Accumulator"),
-    Instruction("STO", true, Instruction::STO, "Copy the contents of the Accumulator to the store line"),
-    Instruction("SUB", true, Instruction::SUB, "Subtract the contents of the store line from the Accumulator"),
-    Instruction("---", false, Instruction::INVALID, "Same as function number 4, SUB"),
-    Instruction("CMP", true, Instruction::CMP, "Skip the next instruction if the content of the Accumulator is negative"),
-    Instruction("SKN", false, Instruction::HALT, "Skip the next instruction if the content of the Accumulator is negative"),
-    Instruction("STOP", false, Instruction::HALT, "Light the stop light and halt the machine"),
-    Instruction("HALT", true, Instruction::HALT, "Light the stop light and halt the machine"),
-    Instruction("STP", false, Instruction::HALT, "Light the stop light and halt the machine")
-};
+    _instructions.clear();
+
+    _instructions.push_back(Instruction("JMP", true, Instruction::JMP, "Copy the contents of store line to CI"));
+    _instructions.push_back(Instruction("JPR", true, Instruction::JPR, "Add the content of the store line to CI"));
+    _instructions.push_back(Instruction("JRP", false, Instruction::JPR, "Add the content of the store line to CI"));
+    _instructions.push_back(Instruction("JMR", false, Instruction::JPR, "Add the content of the store line to CI"));
+    _instructions.push_back(Instruction("LDN", true, Instruction::LDN, "Copy the content of the store line, negated, into the Accumulator"));
+    _instructions.push_back(Instruction("STO", true, Instruction::STO, "Copy the contents of the Accumulator to the store line"));
+    _instructions.push_back(Instruction("SUB", true, Instruction::SUB, "Subtract the contents of the store line from the Accumulator"));
+    _instructions.push_back(Instruction("---", false, Instruction::INVALID, "Same as function number 4, SUB"));
+    _instructions.push_back(Instruction("CMP", true, Instruction::CMP, "Skip the next instruction if the content of the Accumulator is negative"));
+    _instructions.push_back(Instruction("SKN", false, Instruction::HALT, "Skip the next instruction if the content of the Accumulator is negative"));
+    _instructions.push_back(Instruction("STOP", false, Instruction::HALT, "Light the stop light and halt the machine"));
+    _instructions.push_back(Instruction("HALT", true, Instruction::HALT, "Light the stop light and halt the machine"));
+    _instructions.push_back(Instruction("STP", false, Instruction::HALT, "Light the stop light and halt the machine"));
+}
 
 /**
  * @brief Get the opcode for the given mnemonic.

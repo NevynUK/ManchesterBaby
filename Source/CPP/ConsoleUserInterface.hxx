@@ -10,7 +10,7 @@ class ConsoleUserInterface : public UserInterface
         ~ConsoleUserInterface();
 
         void UpdateDisplayTube(StoreLines &storeLines) const override;
-        void UpdateProgress(uint32_t number_of_lines) override;
+        void UpdateProgress(uint number_of_lines) override;
         void DisplayError(const char *error) override;
 
     private:

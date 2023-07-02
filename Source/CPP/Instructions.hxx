@@ -22,6 +22,15 @@ class Instructions
         ~Instructions() = delete;
 
         /**
+         * @brief Populate the lookup table.
+         * 
+         * Note: This is necessary as NuttX does not have the ability to initialise a vector
+         *       with a list of objects in the vector initialisation.
+         * 
+         */
+        static void PopulateLookupTable();
+
+        /**
          * @brief Get the opcode for the given mnemonic.
          * 
          * @note If the mnemonic is not found, an invalid_argment exception is thrown.

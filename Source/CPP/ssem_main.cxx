@@ -26,6 +26,8 @@ void PrintPassOrFail(const string &test_name, bool result)
 
 extern "C" int main()
 {
+    Instructions::PopulateLookupTable();
+    
     PrintPassOrFail("Instructions", TestInstructions());
     PrintPassOrFail("Register", TestRegister());
     PrintPassOrFail("StoreLines", TestStoreLines());

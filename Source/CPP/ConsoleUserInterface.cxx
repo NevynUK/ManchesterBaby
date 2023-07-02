@@ -22,7 +22,7 @@ void ConsoleUserInterface::UpdateDisplayTube(StoreLines &storeLines) const
     printf("                 01234567890123456789012345678901\n");
     for (uint lineNumber = 0; lineNumber < storeLines.Size(); lineNumber++)
     {
-        printf("%4d: %08x - %32s %s\n", lineNumber, storeLines[lineNumber].GetValue(), 
+        printf("%4d: %08x - %32s %s\n", lineNumber, (uint) storeLines[lineNumber].GetValue(), 
                                         storeLines[lineNumber].Binary(), 
                                         storeLines[lineNumber].Disassemble());
     }
@@ -33,7 +33,7 @@ void ConsoleUserInterface::UpdateDisplayTube(StoreLines &storeLines) const
  * 
  * @param number_of_lines Number of line executed.
  */
-void ConsoleUserInterface::UpdateProgress(uint32_t number_of_lines)
+void ConsoleUserInterface::UpdateProgress(uint number_of_lines)
 {
     printf("Executed %u lines\n", number_of_lines);
 }
