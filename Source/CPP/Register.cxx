@@ -1,3 +1,5 @@
+// #include "Instruction.hxx"
+#include "Instructions.hxx"
 #include "Register.hxx"
 
 /**
@@ -135,4 +137,52 @@ int32_t Register::ReverseBits() const noexcept
     }
 
     return(result);
+}
+
+/**
+ * @brief Extract the line number from the store line.
+ * 
+ * @param storeLine Store line to extract the line number from.
+ * @return uint32_t Line number component of the register.
+ */
+uint Register::LineNumber() const noexcept
+{
+    return(_value & 0x1f);
+}
+
+/**
+ * @brief Extract the opcode from the register.
+ * 
+ * @param storeLine to extract the opcode from.
+ * @return uint32_t opcode stored in the store line.
+ */
+uint Register::Opcode() const noexcept
+{
+    return((_value >> 13) & 0x7);
+}
+
+/**
+ * @brief Disassemble the register contents into a SSEM assembler instruction.
+ * 
+ * Note the caller is responsible for deleting the returned string when it is no longer needed.
+ * 
+ * @return char* Disassembled SSEM assembler instruction.
+ */
+char *Register::Disassemble() const
+{
+    char *disassembly = new char[32];
+    bzero(disassembly, 32);
+
+    uint lineNumber = LineNumber();
+    Instruction::opcodes_e opcode = (Instruction::opcodes_e) Opcode();
+    if ((opcode == Instruction::CMP) || (opcode == Instruction::HALT))
+    {
+        snprintf(disassembly, 32, "%s", Instructions::GetMnemonic(opcode));
+    }
+    else
+    {
+        snprintf(disassembly, 32, "%s %d", Instructions::GetMnemonic(opcode), lineNumber);
+    }
+
+    return(disassembly);
 }

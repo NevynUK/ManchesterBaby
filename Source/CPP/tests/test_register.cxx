@@ -64,6 +64,12 @@ bool TestRegister()
     }
     delete[] binary;
 
+    if (register1.LineNumber() != 10)
+    {
+        printf("Register1 did not return the correct line number.\n");
+        return(false);
+    }
+
     if (register2.GetValue() != 0x12345678)
     {
         return(false);

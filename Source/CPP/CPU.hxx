@@ -1,3 +1,6 @@
+#ifndef __CPU_HXX
+#define __CPU_HXX
+
 #include "Instructions.hxx"
 #include "StoreLines.hxx"
 
@@ -11,8 +14,6 @@ class Cpu
         void Reset();
         bool SingleStep();
         void Stop();
-        uint32_t LineNumber(Register const &) const noexcept;
-        uint32_t Opcode(Register const &) const noexcept;
         bool IsStopped() const noexcept;
         Register const &PI() const noexcept;
         Register const &CI() const noexcept;
@@ -25,3 +26,5 @@ class Cpu
         StoreLines &_storeLines;
         bool _stopped;
 };
+
+#endif // __CPU_HXX

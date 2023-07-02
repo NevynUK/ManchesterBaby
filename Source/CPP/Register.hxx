@@ -1,3 +1,6 @@
+#ifndef __REGISTER_HXX
+#define __REGISTER_HXX
+
 #include <iostream>
 
 /**
@@ -33,9 +36,30 @@ class Register
         void SetValue(int32_t value) noexcept;
 
         /**
+         * @brief Get the Line Number from the register.
+         * 
+         * @return int Line number in the register.
+         */
+        uint LineNumber() const noexcept;
+
+        /**
+         * @brief Get the opcode from the register contents.
+         * 
+         * @return uint Opcode in the register.
+         */
+        uint Opcode() const noexcept;
+
+        /**
          * @brief Get the value of the current register as a binary string.
          */
         char *Binary() const;
+
+        /**
+         * @brief Disassemble the register contents into a SSEM assembler instruction.
+         * 
+         * @return char* SSEM assembler instruction.
+         */
+        char *Disassemble() const;
 
         /**
          * @brief Add 1 to the register value.
@@ -67,6 +91,7 @@ class Register
          * @brief Negate the value in the register.
          */
         void Negate() noexcept;
+
     private:
         /**
          * @brief Value held in the register.
@@ -83,3 +108,5 @@ class Register
          */
         int32_t ReverseBits() const noexcept;
 };
+
+#endif // __REGISTER_HXX

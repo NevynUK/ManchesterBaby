@@ -4,10 +4,12 @@
 
 using namespace std;
 
-extern bool TestInstructions(Instructions &instructions);
+extern bool TestInstructions();
 extern bool TestRegister();
 extern bool TestStoreLines();
 extern bool TestCpu();
+extern bool TestAssembler();
+extern bool TestConsoleUserInterface();
 
 void PrintPassOrFail(const string &test_name, bool result)
 {
@@ -24,12 +26,12 @@ void PrintPassOrFail(const string &test_name, bool result)
 
 extern "C" int main()
 {
-    Instructions instructions;
-
-    PrintPassOrFail("Instructions", TestInstructions(instructions));
+    PrintPassOrFail("Instructions", TestInstructions());
     PrintPassOrFail("Register", TestRegister());
     PrintPassOrFail("StoreLines", TestStoreLines());
     PrintPassOrFail("CPU", TestCpu());
+    PrintPassOrFail("Assembler", TestAssembler());
+    PrintPassOrFail("ConsoleUserInterface", TestConsoleUserInterface());
 
     return(0);
 }

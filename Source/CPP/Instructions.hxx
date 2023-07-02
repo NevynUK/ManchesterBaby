@@ -1,3 +1,6 @@
+#ifndef __INSTRUCTIONS_HXX
+#define __INSTRUCTIONS_HXX
+
 #include <vector>
 #include <string>
 
@@ -8,21 +11,15 @@
  */
 class Instructions
 {
-    private:
-        /**
-         * @brief Somewhere to hold all of the instructions.
-         */
-        std::vector<Instruction> _instructions;
-
     public:
         /**
          * @brief Construct a new Instructions object
          */
-        Instructions();
+        Instructions() = delete;
         /**
          * @brief Destroy the Instructions object
          */
-        ~Instructions();
+        ~Instructions() = delete;
 
         /**
          * @brief Get the opcode for the given mnemonic.
@@ -32,7 +29,7 @@ class Instructions
          * @param mnemonic Mnemonic to look up.
          * @return Instruction::opcodes_e Opcode for the specified mnemonic.
          */
-        Instruction::opcodes_e GetOpcode(const std::string &mnemonic);
+        static Instruction::opcodes_e GetOpcode(const std::string &mnemonic);
 
         /**
          * @brief Get the mnemonic for the given opcode.
@@ -42,7 +39,7 @@ class Instructions
          * @param opcode Opcode to look up.
          * @return const std::string& The preferred mnemonic for the opcode.
          */
-        const char *GetMnemonic(Instruction::opcodes_e opcode) const;
+        static const char *GetMnemonic(Instruction::opcodes_e opcode);
 
         /**
          * @brief Description of the action of the opcode.
@@ -50,5 +47,13 @@ class Instructions
          * @param opcode Opcode to look up.
          * @return const std::string& Description of the preferred mnemonic for the specified opcode.
          */
-        const char *GetDescription(Instruction::opcodes_e opcode) const;
+        static const char *GetDescription(Instruction::opcodes_e opcode);
+
+    private:
+        /**
+         * @brief Somewhere to hold all of the instructions.
+         */
+        static std::vector<Instruction> _instructions;
 };
+
+#endif // __INSTRUCTIONS_HXX

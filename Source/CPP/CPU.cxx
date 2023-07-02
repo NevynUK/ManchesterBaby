@@ -58,28 +58,6 @@ Register const &Cpu::Accumulator() const noexcept
 }
 
 /**
- * @brief Extract the line number from the store line.
- * 
- * @param storeLine Store line to extract the line number from.
- * @return uint32_t Line number component of the register.
- */
-uint32_t Cpu::LineNumber(Register const &storeLine) const noexcept
-{
-    return(storeLine.GetValue() & 0x1f);
-}
-
-/**
- * @brief Extract the opcode from the register.
- * 
- * @param storeLine to extract the opcode from.
- * @return uint32_t opcode stored in the store line.
- */
-uint32_t Cpu::Opcode(Register const &storeLine) const noexcept
-{
-    return((storeLine.GetValue() >> 13) & 0x7);
-}
-
-/**
  * @brief Reset the CPU.
  */
 void Cpu::Reset()
@@ -119,14 +97,14 @@ bool Cpu::SingleStep()
     //
     //  Get the store line from the store lines and decode the instruction.
     //
-    uint32_t lineNumber = LineNumber(_ci);
+    uint32_t lineNumber = _ci.LineNumber();
     if (lineNumber >= _storeLines.Size())
     {
         return(false);
     }
     _pi = _storeLines[lineNumber];
-    uint32_t opcode = Opcode(_pi);
-    lineNumber = LineNumber(_pi);
+    uint32_t opcode = _pi.Opcode();
+    lineNumber = _pi.LineNumber();
 
     //
     //  Finally, we can execute the instruction.

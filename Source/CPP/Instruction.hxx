@@ -1,3 +1,6 @@
+#ifndef __INSTRUCTION_HXX
+#define __INSTRUCTION_HXX
+
 #include <stdlib.h>
 
 class Instruction
@@ -72,3 +75,5 @@ class Instruction
          */
         bool IsPreferredMnemonic() noexcept;
 };
+
+#endif // __INSTRUCTION_HXX

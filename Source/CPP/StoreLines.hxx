@@ -1,3 +1,6 @@
+#ifndef __STORE_LINES_HXX
+#define __STORE_LINES_HXX
+
 #include <iostream>
 #include <vector>
 #include <stdexcept>
@@ -52,3 +55,5 @@ class StoreLines
          */
         void Clear();
 };
+
+#endif // __STORE_LINES_HXX
