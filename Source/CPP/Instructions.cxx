@@ -7,6 +7,12 @@
  */
 std::vector<Instruction> Instructions::_instructions;
 
+/**
+ * @brief Populate the instruction lookup table.
+ * 
+ * Note: This is necessary as the NuttX compiler does not support the initialisation of a vector
+ * with a list of objects.
+ */
 void Instructions::PopulateLookupTable()
 {
     _instructions.clear();
