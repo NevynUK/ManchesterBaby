@@ -25,7 +25,7 @@ Instruction::~Instruction()
  * 
  * @return const std::string& Mnemonic for this instruction.
  */
-const char *Instruction::GetMnemonic() const noexcept
+const char *Instruction::Mnemonic() const noexcept
 {
     return(_mnemonic);
 }
@@ -35,7 +35,7 @@ const char *Instruction::GetMnemonic() const noexcept
  * 
  * @return Instruction::opcodes_e Opcode for this instruction.
  */
-Instruction::opcodes_e Instruction::GetOpcode() noexcept
+Instruction::opcodes_e Instruction::Opcode() noexcept
 {
     return(_opcode);
 }
@@ -45,7 +45,7 @@ Instruction::opcodes_e Instruction::GetOpcode() noexcept
  * 
  * @return const std::string& Description of this instructions action.
  */
-const char *Instruction::GetDescription() const noexcept
+const char *Instruction::Description() const noexcept
 {
     return(_description);
 }

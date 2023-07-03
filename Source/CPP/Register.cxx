@@ -177,11 +177,11 @@ char *Register::Disassemble() const
     Instruction::opcodes_e opcode = (Instruction::opcodes_e) Opcode();
     if ((opcode == Instruction::CMP) || (opcode == Instruction::HALT))
     {
-        snprintf(disassembly, 32, "%s", Instructions::GetMnemonic(opcode));
+        snprintf(disassembly, 32, "%s", Instructions::Mnemonic(opcode));
     }
     else
     {
-        snprintf(disassembly, 32, "%s %d", Instructions::GetMnemonic(opcode), lineNumber);
+        snprintf(disassembly, 32, "%s %d", Instructions::Mnemonic(opcode), lineNumber);
     }
 
     return(disassembly);

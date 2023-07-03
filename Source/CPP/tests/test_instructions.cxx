@@ -17,7 +17,7 @@ bool TestMnemonic(const string &mnemonic, int8_t expected_opcode)
 {
     bool result = true;
 
-    int8_t code = Instructions::GetOpcode(mnemonic);
+    int8_t code = Instructions::Opcode(mnemonic);
     if (code != expected_opcode)
     {
         cout << "Invalid opcode for " << mnemonic << ", expected " << expected_opcode << ", received " << code << endl;
@@ -38,7 +38,7 @@ bool TestOpcode(const string &expected_mnemonic, Instruction::opcodes_e opcode)
 {
     bool result = true;
 
-    const char *mn = Instructions::GetMnemonic(opcode);
+    const char *mn = Instructions::Mnemonic(opcode);
     if (mn != expected_mnemonic)
     {
         cout << "Invalid mnemonic for " << opcode << ", expected " << expected_mnemonic << ", received " << mn << endl;
@@ -76,7 +76,7 @@ bool TestInstructions()
     //
     //  Now test for an invalid mnemonic.
     //
-    result &= (Instructions::GetOpcode("InvalidMnemonic") == Instruction::UNKNOWN);
+    result &= (Instructions::Opcode("InvalidMnemonic") == Instruction::UNKNOWN);
     
     //
     //  Now get the preferred mnemonics for the opcodes.
@@ -91,7 +91,7 @@ bool TestInstructions()
     //
     // Now test for invalid opcode, we should get an exception.
     //
-    result &= (Instructions::GetMnemonic((Instruction::opcodes_e) 0x08) == nullptr);
+    result &= (Instructions::Mnemonic((Instruction::opcodes_e) 0x08) == nullptr);
 
     return(result);
 }

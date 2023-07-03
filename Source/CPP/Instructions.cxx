@@ -40,13 +40,13 @@ void Instructions::PopulateLookupTable()
  * @param mnemonic Mnemonic to look up.
  * @return Instruction::opcodes_e Opcode for the specified mnemonic.
  */
-Instruction::opcodes_e Instructions::GetOpcode(const std::string &mnemonic)
+Instruction::opcodes_e Instructions::Opcode(const std::string &mnemonic)
 {
     for (auto instruction : _instructions)
     {
-        if (instruction.GetMnemonic() == mnemonic)
+        if (instruction.Mnemonic() == mnemonic)
         {
-            return(instruction.GetOpcode());
+            return(instruction.Opcode());
         }
     }
 
@@ -61,13 +61,13 @@ Instruction::opcodes_e Instructions::GetOpcode(const std::string &mnemonic)
  * @param opcode Opcode to look up.
  * @return const std::string& The preferred mnemonic for the opcode.
  */
-const char *Instructions::GetMnemonic(Instruction::opcodes_e opcode)
+const char *Instructions::Mnemonic(Instruction::opcodes_e opcode)
 {
     for (auto instruction : _instructions)
     {
-        if ((instruction.GetOpcode() == opcode) && (instruction.IsPreferredMnemonic() == true))
+        if ((instruction.Opcode() == opcode) && (instruction.IsPreferredMnemonic() == true))
         {
-            return(instruction.GetMnemonic());
+            return(instruction.Mnemonic());
         }
     }
 
@@ -80,13 +80,13 @@ const char *Instructions::GetMnemonic(Instruction::opcodes_e opcode)
  * @param opcode Opcode to look up.
  * @return const std::string& Description of the preferred mnemonic for the specified opcode.
  */
-const char *Instructions::GetDescription(Instruction::opcodes_e opcode)
+const char *Instructions::Description(Instruction::opcodes_e opcode)
 {
     for (auto instruction : _instructions)
     {
-        if ((instruction.GetOpcode() == opcode) && (instruction.IsPreferredMnemonic() == true))
+        if ((instruction.Opcode() == opcode) && (instruction.IsPreferredMnemonic() == true))
         {
-            return(instruction.GetDescription());
+            return(instruction.Description());
         }
     }
 

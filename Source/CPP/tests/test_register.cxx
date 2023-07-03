@@ -43,7 +43,7 @@ bool TestRegister()
     }
 
     register1.Negate();
-    if (((uint32_t) register1.GetValue()) != -10)
+    if (register1.GetValue() != -10)
     {
         printf("Register1 did not negate correctly.\n");
         return(false);

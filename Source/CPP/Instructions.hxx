@@ -38,7 +38,7 @@ class Instructions
          * @param mnemonic Mnemonic to look up.
          * @return Instruction::opcodes_e Opcode for the specified mnemonic.
          */
-        static Instruction::opcodes_e GetOpcode(const std::string &mnemonic);
+        static Instruction::opcodes_e Opcode(const std::string &mnemonic);
 
         /**
          * @brief Get the mnemonic for the given opcode.
@@ -48,7 +48,7 @@ class Instructions
          * @param opcode Opcode to look up.
          * @return const std::string& The preferred mnemonic for the opcode.
          */
-        static const char *GetMnemonic(Instruction::opcodes_e opcode);
+        static const char *Mnemonic(Instruction::opcodes_e opcode);
 
         /**
          * @brief Description of the action of the opcode.
@@ -56,7 +56,7 @@ class Instructions
          * @param opcode Opcode to look up.
          * @return const std::string& Description of the preferred mnemonic for the specified opcode.
          */
-        static const char *GetDescription(Instruction::opcodes_e opcode);
+        static const char *Description(Instruction::opcodes_e opcode);
 
     private:
         /**

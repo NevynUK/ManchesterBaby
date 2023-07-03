@@ -51,21 +51,21 @@ class Instruction
          * 
          * @return const std::string& Mnemonic for this instruction.
          */
-        const char *GetMnemonic() const noexcept;
+        const char *Mnemonic() const noexcept;
 
         /**
          * @brief Get the opcode for this instruction.
          * 
          * @return Instruction::opcodes_e Opcode for this instruction.
          */
-        Instruction::opcodes_e GetOpcode() noexcept;
+        Instruction::opcodes_e Opcode() noexcept;
 
         /**
          * @brief Get the description of the action of this instruction.
          * 
          * @return const std::string& Description of this instructions action.
          */
-        const char *GetDescription() const noexcept;
+        const char *Description() const noexcept;
 
         /**
          * @brief Is this the preferred mnemonic?
