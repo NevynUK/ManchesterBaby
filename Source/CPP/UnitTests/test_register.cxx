@@ -1,4 +1,4 @@
-#include "../Register.hxx"
+#include "Register.hxx"
 
 /**
  * @brief Test the register class.

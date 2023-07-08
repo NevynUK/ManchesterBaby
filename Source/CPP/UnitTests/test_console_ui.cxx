@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "../StoreLines.hxx"
-#include "../ConsoleUserInterface.hxx"
+#include "StoreLines.hxx"
+#include "ConsoleUserInterface.hxx"
 
 bool TestConsoleUserInterface()
 {

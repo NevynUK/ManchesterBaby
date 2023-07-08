@@ -1,4 +1,4 @@
-#include "../CPU.hxx"
+#include "CPU.hxx"
 
 /**
  * @brief Test the CPU class

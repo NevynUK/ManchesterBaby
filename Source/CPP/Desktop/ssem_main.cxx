@@ -8,7 +8,7 @@ extern bool TestInstructions();
 extern bool TestRegister();
 extern bool TestStoreLines();
 extern bool TestCpu();
-extern bool TestAssembler();
+extern bool TestCompiler();
 extern bool TestConsoleUserInterface();
 
 void PrintPassOrFail(const string &test_name, bool result)
@@ -32,7 +32,7 @@ extern "C" int main()
     PrintPassOrFail("Register", TestRegister());
     PrintPassOrFail("StoreLines", TestStoreLines());
     PrintPassOrFail("CPU", TestCpu());
-    PrintPassOrFail("Assembler", TestAssembler());
+    PrintPassOrFail("Compiler", TestCompiler());
     PrintPassOrFail("ConsoleUserInterface", TestConsoleUserInterface());
 
     return(0);

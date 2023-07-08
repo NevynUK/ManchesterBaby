@@ -1,4 +1,4 @@
-#include "../StoreLines.hxx"
+#include "StoreLines.hxx"
 
 /**
  * @brief Test the creation of a StoreLines object.

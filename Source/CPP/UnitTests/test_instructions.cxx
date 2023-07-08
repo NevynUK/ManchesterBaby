@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../Instructions.hxx"
+#include "Instructions.hxx"
 
 using namespace std;
 
