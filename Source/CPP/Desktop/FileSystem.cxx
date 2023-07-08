@@ -41,21 +41,27 @@ vector<const char *> *FileSystem::FileList()
 {
     vector<const char *> *result = nullptr;
 
-    // DIR *directory = opendir(MOUNT_POINT);
-    // if (directory != NULL)
-    // {
-    //     result = new vector<const char *>;
-    //     if (result)
-    //     {
-    //         for (struct dirent *entry = readdir(directory); entry; entry = readdir(directory))
-    //         {
-    //             if (DIRENT_ISFILE(entry->d_type))
-    //             {
-    //                 result->push_back(strdup(entry->d_name));
-    //             }
-    //         }
-    //     }
-    // }
+    char applicationDirectory[PATH_MAX];
+    if (getcwd(applicationDirectory, sizeof(applicationDirectory)) != NULL)
+    {
+        char ssemApplicationDirectory[PATH_MAX];
+        snprintf(ssemApplicationDirectory, PATH_MAX, "%s/../NuttX/SSEMApps", applicationDirectory);
+        DIR *directory = opendir(ssemApplicationDirectory);
+        if (directory != NULL)
+        {
+            result = new vector<const char *>;
+            if (result)
+            {
+                for (struct dirent *entry = readdir(directory); entry; entry = readdir(directory))
+                {
+                    if (entry->d_type == DT_REG)
+                    {
+                        result->push_back(strdup(entry->d_name));
+                    }
+                }
+            }
+        }
+    }
 
     return(result);
 }
@@ -78,27 +84,31 @@ vector<const char *> *FileSystem::Contents(const char *filename)
 {
     vector<const char *> *result = nullptr;
 
-    // char fullpath[128];
-    // snprintf(fullpath, 128, "%s/%s", MOUNT_POINT, filename);
-    // FILE *file = fopen(fullpath , "r");
-    // if (file != NULL)
-    // {
-    //     result = new vector<const char *>;
-    //     if (result)
-    //     {
-    //         char line[128];
-    //         while((fgets(line, 128, file) != NULL))
-    //         {
-    //             char *newline = strchr(line ,'\n');
-    //             if (newline)
-    //             {
-    //                 *newline = 0;
-    //             }
-    //             result->push_back(strdup(line));
-    //         }
-    //     }
-    //     fclose(file);
-    // }
+    char applicationDirectory[PATH_MAX];
+    if (getcwd(applicationDirectory, sizeof(applicationDirectory)) != NULL)
+    {
+        char fullpath[PATH_MAX];
+        snprintf(fullpath, PATH_MAX, "%s/../NuttX/SSEMApps/%s", applicationDirectory, filename);
+        FILE *file = fopen(fullpath , "r");
+        if (file != NULL)
+        {
+            result = new vector<const char *>;
+            if (result)
+            {
+                char line[128];
+                while((fgets(line, 128, file) != NULL))
+                {
+                    char *newline = strchr(line ,'\n');
+                    if (newline)
+                    {
+                        *newline = 0;
+                    }
+                    result->push_back(strdup(line));
+                }
+            }
+            fclose(file);
+        }
+    }
 
     return(result);
 }

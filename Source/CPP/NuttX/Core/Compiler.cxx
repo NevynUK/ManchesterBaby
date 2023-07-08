@@ -1,10 +1,11 @@
 #include "Compiler.hxx"
+#include "FileSystem.hxx"
 
 #include <stdexcept>
 
-StoreLines *Compiler::Compile(FileSystemBase *fileSystem, const char *filename)
+StoreLines *Compiler::Compile(const char *filename)
 {
-    vector<const char *> *program = fileSystem->Contents(filename);
+    vector<const char *> *program = FileSystem::Contents(filename);
     return(Compile(program));
 }
 

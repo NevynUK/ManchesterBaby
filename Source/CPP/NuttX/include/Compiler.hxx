@@ -2,7 +2,6 @@
 #define __COMPILER_HXX
 
 #include "StoreLines.hxx"
-#include "FileSystemBase.hxx"
 #include <vector>
 
 /**
@@ -14,7 +13,7 @@ class Compiler
         Compiler() = delete;
         ~Compiler() = delete;
 
-        StoreLines *Compile(FileSystemBase *, const char *);
+        StoreLines *Compile(const char *);
         StoreLines *Compile(const vector<const char *> *);
 
     private:

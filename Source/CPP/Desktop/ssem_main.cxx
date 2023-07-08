@@ -1,6 +1,6 @@
 #include <iostream>
-#include <string>
 #include "Instructions.hxx"
+#include "FileSystem.hxx"
 
 using namespace std;
 
@@ -10,6 +10,7 @@ extern bool TestStoreLines();
 extern bool TestCpu();
 extern bool TestCompiler();
 extern bool TestConsoleUserInterface();
+extern bool TestFileSystem();
 
 void PrintPassOrFail(const string &test_name, bool result)
 {
@@ -32,6 +33,7 @@ extern "C" int main()
     PrintPassOrFail("Register", TestRegister());
     PrintPassOrFail("StoreLines", TestStoreLines());
     PrintPassOrFail("CPU", TestCpu());
+    PrintPassOrFail("FileSystem", TestFileSystem());
     PrintPassOrFail("Compiler", TestCompiler());
     PrintPassOrFail("ConsoleUserInterface", TestConsoleUserInterface());
 
