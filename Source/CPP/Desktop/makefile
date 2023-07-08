@@ -3,7 +3,7 @@ appname := ssem_main
 CC=gcc
 CXX=g++
 RM=rm -f
-CXXFLAGS=--std=c++17
+CXXFLAGS=--std=c++17 -Wall -Wextra -pedantic
 
 srcfiles := $(shell find . -name "*.cxx")
 srcfiles += $(shell find ../NuttX//Core -name "*.cxx")

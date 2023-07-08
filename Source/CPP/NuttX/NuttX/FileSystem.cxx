@@ -37,10 +37,10 @@
     #error "ROMFS support not enabled"
 #endif
 
-const char *FileSystem::MOUNT_POINT = "/usr/ssemapps";
-const char *FileSystem::MOUNT_DEVICE_NAME = "/dev/ram1";
-const int FileSystem::RAM_DEVICE_NUMBER = 1;
-const int FileSystem::SECTOR_SIZE = 64;
+#define MOUNT_POINT             "/usr/ssemapps"
+#define MOUNT_DEVICE_NAME       "/dev/ram1"
+#define RAM_DEVICE_NUMBER       1
+#define SECTOR_SIZE             64
 
 /**
  * @brief Calculate the number of sectors required to hold the specified image.
@@ -48,7 +48,7 @@ const int FileSystem::SECTOR_SIZE = 64;
  * @param imageSize Size of the ROMFS image.
  * @return constexpr int Number of sectors required to hold the image.
  */
-constexpr int FileSystem::NumberOfSectors(int imageSize)
+constexpr int NumberOfSectors(int imageSize)
 {
     return((imageSize + SECTOR_SIZE - 1) / SECTOR_SIZE);
 }

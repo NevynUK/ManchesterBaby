@@ -32,7 +32,7 @@ StoreLines::~StoreLines()
  */
 Register &StoreLines::operator[](uint index)
 {
-    if ((index < 0) || (index >= _lines.size()))
+    if (index >= _lines.size())
     {
         throw(std::invalid_argument("Index out of range"));
     }
