@@ -6,7 +6,7 @@
 class Constants
 {
     public:
-        static const unsigned LINE_LENGTH = 12;
+        static const unsigned LINE_LENGTH = 128;
 };
 
 #endif // __CONSTANTS_HXX
