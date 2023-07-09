@@ -16,6 +16,11 @@ class Instruction
             INVALID = 0x05,
             CMP = 0x06,
             HALT = 0x07,
+            //
+            //  Not really opcodes but special tokens used in the compiler.
+            //
+            NUM = 0x08,
+            BIN = 0x09,
             UNKNOWN = 0xff
         };        
 

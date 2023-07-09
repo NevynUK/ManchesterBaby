@@ -13,18 +13,28 @@ class Compiler
         Compiler() = delete;
         ~Compiler() = delete;
 
-        StoreLines *Compile(const char *);
-        StoreLines *Compile(const vector<const char *> *);
+        static StoreLines &Compile(const char *);
+        static StoreLines &Compile(const vector<const char *> &);
+
+        static bool IsComment(const char *);
+        static bool IsNumber(const char *);
+        static bool IsBlank(const char *);
+        static bool IsBinary(const char *);
 
     private:
+        enum class Token { Comment, StoreLineNumber, Instruction, LineNumber, Unknown };
+
         struct TokenisedLine
         {
-            uint storeLineNumber;
-            uint opcode;
-            uint lineNumber;
+            uint32_t storeLineNumber;
+            uint32_t opcode;
+            uint32_t operand;
         };
 
-        vector<TokenisedLine *> *Tokenise(const vector<const char *> &);
+        static vector<TokenisedLine *> *Tokenise(const vector<const char *> &);
+        static uint32_t GetStoreLineNumber(const char *);
+        static uint32_t GetOperand(const char *);
+        static uint32_t GetBinary(const char *);
 };
 
 #endif // __COMPILER_HXX

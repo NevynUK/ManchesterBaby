@@ -30,6 +30,8 @@ void Instructions::PopulateLookupTable()
     _instructions.push_back(Instruction("STOP", false, Instruction::HALT, "Light the stop light and halt the machine"));
     _instructions.push_back(Instruction("HALT", true, Instruction::HALT, "Light the stop light and halt the machine"));
     _instructions.push_back(Instruction("STP", false, Instruction::HALT, "Light the stop light and halt the machine"));
+    _instructions.push_back(Instruction("NUM", true, Instruction::NUM, "Store a number"));
+    _instructions.push_back(Instruction("BIN", true, Instruction::BIN, "Store a binary number"));
 }
 
 /**

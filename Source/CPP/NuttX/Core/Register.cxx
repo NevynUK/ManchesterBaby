@@ -1,6 +1,7 @@
 // #include "Instruction.hxx"
 #include "Instructions.hxx"
 #include "Register.hxx"
+#include "Constants.hxx"
 
 /**
  * @brief Construct a new Register object
@@ -170,18 +171,18 @@ uint Register::Opcode() const noexcept
  */
 char *Register::Disassemble() const
 {
-    char *disassembly = new char[32];
-    bzero(disassembly, 32);
+    char *disassembly = new char[Constants::LINE_LENGTH];
+    bzero(disassembly, Constants::LINE_LENGTH);
 
     uint lineNumber = LineNumber();
     Instruction::opcodes_e opcode = (Instruction::opcodes_e) Opcode();
     if ((opcode == Instruction::CMP) || (opcode == Instruction::HALT))
     {
-        snprintf(disassembly, 32, "%s", Instructions::Mnemonic(opcode));
+        snprintf(disassembly, Constants::LINE_LENGTH, "%s", Instructions::Mnemonic(opcode));
     }
     else
     {
-        snprintf(disassembly, 32, "%s %d", Instructions::Mnemonic(opcode), lineNumber);
+        snprintf(disassembly, Constants::LINE_LENGTH, "%s %d", Instructions::Mnemonic(opcode), lineNumber);
     }
 
     return(disassembly);
