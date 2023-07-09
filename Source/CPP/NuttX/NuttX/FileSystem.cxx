@@ -22,6 +22,7 @@
 
 #include "romfs_ssemapps.h"
 #include "FileSystem.hxx"
+#include "Constants.hxx"
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -135,16 +136,16 @@ vector<const char *> *FileSystem::Contents(const char *filename)
 {
     vector<const char *> *result = nullptr;
 
-    char fullpath[128];
-    snprintf(fullpath, 128, "%s/%s", MOUNT_POINT, filename);
+    char fullpath[Constants::MaxPathLength];
+    snprintf(fullpath, Constants::LINE_LENGTH, "%s/%s", MOUNT_POINT, filename);
     FILE *file = fopen(fullpath , "r");
     if (file != NULL)
     {
         result = new vector<const char *>;
         if (result)
         {
-            char line[128];
-            while((fgets(line, 128, file) != NULL))
+            char line[Constants::LINE_LENGTH];
+            while((fgets(line, Constants::LINE_LENGTH, file) != NULL))
             {
                 char *newline = strchr(line ,'\n');
                 if (newline)

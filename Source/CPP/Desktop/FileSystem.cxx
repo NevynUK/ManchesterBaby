@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "FileSystem.hxx"
+#include "Constants.hxx"
 
 using namespace std;
 
@@ -95,8 +96,8 @@ vector<const char *> *FileSystem::Contents(const char *filename)
             result = new vector<const char *>;
             if (result)
             {
-                char line[128];
-                while((fgets(line, 128, file) != NULL))
+                char line[Constants::LINE_LENGTH];
+                while((fgets(line, Constants::LINE_LENGTH, file) != NULL))
                 {
                     char *newline = strchr(line ,'\n');
                     if (newline)

@@ -2,7 +2,7 @@
 
 #define FILE_TO_READ        "hfr989.ssem"
 
-const char *hfr989ExpectedContents[] = 
+static const char *hfr989ExpectedContents[] = 
 {
     "01:   LDN 18",
     "02:   LDN 19",
