@@ -12,10 +12,11 @@
 using namespace std;
 
 /**
- * @brief 
+ * @brief Read a file from the file system and compile the contents returning the
+ *        compiled program as store lines.
  * 
- * @param filename 
- * @return StoreLines& 
+ * @param filename Name of the file to be read.
+ * @return StoreLines& StoreLines containing the compiled program.
  */
 StoreLines &Compiler::Compile(const char *filename)
 {
@@ -24,10 +25,10 @@ StoreLines &Compiler::Compile(const char *filename)
 }
 
 /**
- * @brief 
+ * @brief Compiler the program contained in the vector of const char * pointers.
  * 
- * @param program 
- * @return StoreLines& 
+ * @param program Vector containing char * lines of text to be compiled.
+ * @return StoreLines& StoreLines containing the compiled program.
  */
 StoreLines &Compiler::Compile(const vector<const char *> &program)
 {
@@ -68,10 +69,12 @@ StoreLines &Compiler::Compile(const vector<const char *> &program)
 }
 
 /**
- * @brief 
+ * @brief Convert the lines of text into a number of tokenised lines.
  * 
- * @param lines 
- * @return vector<Compiler::TokenisedLine *>* 
+ * Note that the elements of the line are separated by one or more spaces.
+ * 
+ * @param lines Vector containing the lines of text
+ * @return vector<Compiler::TokenisedLine *>* Tokenised lines.
  */
 vector<Compiler::TokenisedLine *> *Compiler::Tokenise(const vector<const char *> &lines)
 {
@@ -130,10 +133,10 @@ vector<Compiler::TokenisedLine *> *Compiler::Tokenise(const vector<const char *>
 }
 
 /**
- * @brief 
+ * @brief Convert the first part of the line into the store line number.
  * 
- * @param line 
- * @return uint32_t 
+ * @param line First part of the line being compiled.
+ * @return uint32_t StoreLine number for this line.
  */
 uint32_t Compiler::GetStoreLineNumber(const char *line)
 {
@@ -167,6 +170,12 @@ uint32_t Compiler::GetStoreLineNumber(const char *line)
     return(result);
 }
 
+/**
+ * @brief Convert the text into an opcode.
+ * 
+ * @param line Part of the line to be converted
+ * @return uint32_t Opcode representing the text.
+ */
 uint32_t Compiler::GetOperand(const char *line)
 {
     uint32_t number = 0;
@@ -188,6 +197,12 @@ uint32_t Compiler::GetOperand(const char *line)
     return(number);
 }
 
+/**
+ * @brief Convert the text from binary into a number.
+ * 
+ * @param line Partial line to be converted.
+ * @return uint32_t Number represented by the value.
+ */
 uint32_t Compiler::GetBinary(const char *line)
 {
     uint32_t number = 0;
@@ -210,11 +225,11 @@ uint32_t Compiler::GetBinary(const char *line)
 }
 
 /**
- * @brief 
+ * @brief Is the text a comment?
  * 
- * @param line 
- * @return true 
- * @return false 
+ * @param line Text to be checked.
+ * @return true If the text represents a comment.
+ * @return false If the text is not a comment.
  */
 bool Compiler::IsComment(const char *line)
 {
@@ -222,11 +237,11 @@ bool Compiler::IsComment(const char *line)
 }
 
 /**
- * @brief 
+ * @brief Can the text be a number (all characters are digits)
  * 
- * @param line 
- * @return true 
- * @return false 
+ * @param line Text to be checked.
+ * @return true If the text could be a number.
+ * @return false If the text contains non-digit characters.
  */
 bool Compiler::IsNumber(const char *line)
 {
@@ -246,11 +261,11 @@ bool Compiler::IsNumber(const char *line)
 }
 
 /**
- * @brief 
+ * @brief Is the text blank?
  * 
- * @param line 
- * @return true 
- * @return false 
+ * @param line Text to be checked.
+ * @return true If the line is blank.
+ * @return false If the line is not blank.
  */
 bool Compiler::IsBlank(const char *line)
 {
@@ -258,11 +273,11 @@ bool Compiler::IsBlank(const char *line)
 }
 
 /**
- * @brief 
+ * @brief Is the text composed solely of 0s and 1s?
  * 
- * @param line 
- * @return true 
- * @return false 
+ * @param line Text to be checked.
+ * @return true If the text is binary.
+ * @return false If the text is not binary.
  */
 bool Compiler::IsBinary(const char *line)
 {
