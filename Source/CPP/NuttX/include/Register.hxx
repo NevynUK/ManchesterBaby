@@ -1,6 +1,7 @@
 #ifndef __REGISTER_HXX
 #define __REGISTER_HXX
 
+#include <string.h>
 #include <iostream>
 
 /**

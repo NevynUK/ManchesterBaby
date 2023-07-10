@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "FileSystem.hxx"
 
 #define FILE_TO_READ        "hfr989.ssem"
@@ -60,6 +64,7 @@ bool TestFileSystem()
         printf("Cannot find " FILE_TO_READ " on file store.\n");
         return(false);
     }
+    delete fileList;
     
     vector<const char *> *contents = FileSystem::Contents(FILE_TO_READ);
     if (!contents)
@@ -79,6 +84,7 @@ bool TestFileSystem()
         free((void *) line);
     }
     contents->clear();
+    delete contents;
 
     return(true);
 }

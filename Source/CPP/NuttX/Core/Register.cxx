@@ -1,4 +1,5 @@
-// #include "Instruction.hxx"
+#include <stdlib.h>
+
 #include "Instructions.hxx"
 #include "Register.hxx"
 #include "Constants.hxx"
@@ -99,7 +100,7 @@ char *Register::Binary() const
     int32_t value = ReverseBits();
 
     int bitcount = 32;
-    while (bitcount >= 0)
+    while (bitcount > 0)
     {
         bitcount--;
         if (value & mask)

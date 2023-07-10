@@ -60,6 +60,7 @@ bool TestRegister()
     if (strcmp(binary, "01010000000000000000000000000000") != 0)
     {
         printf("Register1 did not convert to binary correctly, result '%s'.\n", binary);
+        delete binary;
         return(false);
     }
     delete[] binary;

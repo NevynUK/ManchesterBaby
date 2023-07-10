@@ -145,7 +145,7 @@ bool TestCompiler()
     }
 
     vector<const char *> *program;
-    StoreLines storeLines;
+    StoreLines *storeLines;
     try
     {
         program = CreateProgram(goodApplication);

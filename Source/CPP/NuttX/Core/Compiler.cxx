@@ -16,9 +16,9 @@ using namespace std;
  *        compiled program as store lines.
  * 
  * @param filename Name of the file to be read.
- * @return StoreLines& StoreLines containing the compiled program.
+ * @return StoreLines* StoreLines containing the compiled program.
  */
-StoreLines &Compiler::Compile(const char *filename)
+StoreLines *Compiler::Compile(const char *filename)
 {
     vector<const char *> *program = FileSystem::Contents(filename);
     return(Compile(*program));
@@ -28,9 +28,9 @@ StoreLines &Compiler::Compile(const char *filename)
  * @brief Compiler the program contained in the vector of const char * pointers.
  * 
  * @param program Vector containing char * lines of text to be compiled.
- * @return StoreLines& StoreLines containing the compiled program.
+ * @return StoreLines* StoreLines containing the compiled program.
  */
-StoreLines &Compiler::Compile(const vector<const char *> &program)
+StoreLines *Compiler::Compile(const vector<const char *> &program)
 {
     if (program.size() == 0)
     {
@@ -65,7 +65,7 @@ StoreLines &Compiler::Compile(const vector<const char *> &program)
         delete tokens;
     }
 
-    return(*storeLines);
+    return(storeLines);
 }
 
 /**

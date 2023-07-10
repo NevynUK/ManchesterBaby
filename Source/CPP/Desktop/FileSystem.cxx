@@ -61,6 +61,7 @@ vector<const char *> *FileSystem::FileList()
                     }
                 }
             }
+            closedir(directory);
         }
     }
 

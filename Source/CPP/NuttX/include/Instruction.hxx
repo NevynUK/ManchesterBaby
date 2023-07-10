@@ -1,6 +1,7 @@
 #ifndef __INSTRUCTION_HXX
 #define __INSTRUCTION_HXX
 
+#include <stdint.h>
 #include <stdlib.h>
 
 class Instruction

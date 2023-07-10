@@ -13,8 +13,8 @@ class Compiler
         Compiler() = delete;
         ~Compiler() = delete;
 
-        static StoreLines &Compile(const char *);
-        static StoreLines &Compile(const vector<const char *> &);
+        static StoreLines *Compile(const char *);
+        static StoreLines *Compile(const vector<const char *> &);
 
         static bool IsComment(const char *);
         static bool IsNumber(const char *);

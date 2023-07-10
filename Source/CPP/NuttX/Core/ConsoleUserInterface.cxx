@@ -22,9 +22,12 @@ void ConsoleUserInterface::UpdateDisplayTube(StoreLines &storeLines) const
     printf("                 01234567890123456789012345678901\n");
     for (uint lineNumber = 0; lineNumber < storeLines.Size(); lineNumber++)
     {
+        char *binary = storeLines[lineNumber].Binary();
+        char *disassembled = storeLines[lineNumber].Disassemble();
         printf("%4d: %08x - %32s %s\n", lineNumber, (uint) storeLines[lineNumber].GetValue(), 
-                                        storeLines[lineNumber].Binary(), 
-                                        storeLines[lineNumber].Disassemble());
+                                        binary, disassembled);
+        delete[] disassembled;
+        delete[] binary;
     }
 }
 

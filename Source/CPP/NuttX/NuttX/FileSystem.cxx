@@ -113,6 +113,7 @@ vector<const char *> *FileSystem::FileList()
                 }
             }
         }
+        closedir(directory);
     }
 
     return(result);
