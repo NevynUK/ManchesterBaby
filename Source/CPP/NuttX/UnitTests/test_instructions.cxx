@@ -73,6 +73,8 @@ bool TestInstructions()
     result &= TestMnemonic("STOP", Instruction::HALT);
     result &= TestMnemonic("HALT", Instruction::HALT);
     result &= TestMnemonic("STP", Instruction::HALT);
+    result &= TestMnemonic("NUM", Instruction::NUM);
+    result &= TestMnemonic("BIN", Instruction::BIN);
     //
     //  Now test for an invalid mnemonic.
     //
@@ -91,7 +93,7 @@ bool TestInstructions()
     //
     // Now test for invalid opcode, we should get an exception.
     //
-    result &= (Instructions::Mnemonic((Instruction::opcodes_e) 0x08) == nullptr);
+    result &= (Instructions::Mnemonic((Instruction::opcodes_e) 0x50) == nullptr);
 
     return(result);
 }
