@@ -20,6 +20,26 @@ static const char *goodApplication[] =
     "19:   BIN 0101"
 };
 
+static const char *invalidLineNumber[] = 
+{
+    "01 LDN 18"
+};
+
+static const char *invalidOpcode[] = 
+{
+    "01:   LDM 18"
+};
+
+static const char *invalidOperand1[] = 
+{
+    "01:   LDN 18 19"
+};
+
+static const char *invalidOperand2[] = 
+{
+    "01:   LDN"
+};
+
 vector<const char *> *CreateProgram(const char **lines)
 {
     vector<const char *> *program = new vector<const char *>();
@@ -117,18 +137,85 @@ bool CheckSupportingMethods()
 
 bool TestCompiler()
 {
+    bool result = true;
+
     if (!CheckSupportingMethods())
     {
         return(false);
     }
 
-    vector<const char *> *program = CreateProgram(goodApplication);
-    auto storeLines = Compiler::Compile(*program);
+    vector<const char *> *program;
+    StoreLines storeLines;
+    try
+    {
+        program = CreateProgram(goodApplication);
+        storeLines = Compiler::Compile(*program);
 
-    ConsoleUserInterface consoleUserInterface;
-    consoleUserInterface.UpdateDisplayTube(storeLines);
+        program->clear();
+        delete program;
+        result &= true;
+    }
+    catch(const std::exception& e)
+    {
+        printf("Creating a valid program.\n");
+        result = false;
+    }
+    
+    try
+    {
+        program = CreateProgram(invalidLineNumber);
+        storeLines = Compiler::Compile(*program);
+        program->clear();
+        delete program;
+        printf("Creating a program with an invalid line number.\n");
+        result = false;
+    }
+    catch(const std::exception& e)
+    {
+        result &= true;
+    }  
 
-    program->clear();
-    delete program;
-    return(true);
+    try
+    {
+        program = CreateProgram(invalidOpcode);
+        storeLines = Compiler::Compile(*program);
+        program->clear();
+        delete program;
+        printf("Creating a program with an invalid opcode.\n");
+        result = false;
+    }
+    catch(const std::exception& e)
+    {
+        result &= true;
+    }
+    
+    try
+    {
+        program = CreateProgram(invalidOperand1);
+        storeLines = Compiler::Compile(*program);
+        program->clear();
+        delete program;
+        printf("Creating a program with an invalid operand 1.\n");
+        result = false;
+    }
+    catch(const std::exception& e)
+    {
+        result &= true;
+    }
+    
+    try
+    {
+        program = CreateProgram(invalidOperand2);
+        storeLines = Compiler::Compile(*program);
+        program->clear();
+        delete program;
+        printf("Creating a program with an invalid operand 2.\n");
+        result = false;
+    }
+    catch(const std::exception& e)
+    {
+        result &= true;
+    }
+    
+   return(result);
 }
