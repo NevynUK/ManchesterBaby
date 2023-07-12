@@ -40,11 +40,11 @@ static const char *invalidOperand2[] =
     "01:   LDN"
 };
 
-vector<const char *> *CreateProgram(const char **lines)
+vector<const char *> *CreateProgram(const char **lines, uint size)
 {
     vector<const char *> *program = new vector<const char *>();
 
-    for (uint index = 0; index < sizeof(goodApplication) / sizeof(char *); index++)
+    for (uint index = 0; index < size; index++)
     {
         program->push_back(lines[index]);
     }
@@ -148,9 +148,9 @@ bool TestCompiler()
     StoreLines *storeLines;
     try
     {
-        program = CreateProgram(goodApplication);
+        program = CreateProgram(goodApplication, sizeof(goodApplication) / sizeof(char *));
         storeLines = Compiler::Compile(*program);
-
+        delete storeLines;
         program->clear();
         delete program;
         result &= true;
@@ -163,8 +163,9 @@ bool TestCompiler()
     
     try
     {
-        program = CreateProgram(invalidLineNumber);
+        program = CreateProgram(invalidLineNumber, sizeof(invalidLineNumber) / sizeof(char *));
         storeLines = Compiler::Compile(*program);
+        delete storeLines;
         program->clear();
         delete program;
         printf("Creating a program with an invalid line number.\n");
@@ -172,13 +173,15 @@ bool TestCompiler()
     }
     catch(const std::exception& e)
     {
+        delete program;
         result &= true;
     }  
 
     try
     {
-        program = CreateProgram(invalidOpcode);
+        program = CreateProgram(invalidOpcode, sizeof(invalidOpcode) / sizeof(char *));
         storeLines = Compiler::Compile(*program);
+        delete storeLines;
         program->clear();
         delete program;
         printf("Creating a program with an invalid opcode.\n");
@@ -186,13 +189,15 @@ bool TestCompiler()
     }
     catch(const std::exception& e)
     {
+        delete program;
         result &= true;
     }
     
     try
     {
-        program = CreateProgram(invalidOperand1);
+        program = CreateProgram(invalidOperand1, sizeof(invalidOperand1) / sizeof(char *));
         storeLines = Compiler::Compile(*program);
+        delete storeLines;
         program->clear();
         delete program;
         printf("Creating a program with an invalid operand 1.\n");
@@ -200,13 +205,15 @@ bool TestCompiler()
     }
     catch(const std::exception& e)
     {
+        delete program;
         result &= true;
     }
     
     try
     {
-        program = CreateProgram(invalidOperand2);
+        program = CreateProgram(invalidOperand2, sizeof(invalidOperand2) / sizeof(char *));
         storeLines = Compiler::Compile(*program);
+        delete storeLines;
         program->clear();
         delete program;
         printf("Creating a program with an invalid operand 2.\n");
@@ -214,6 +221,7 @@ bool TestCompiler()
     }
     catch(const std::exception& e)
     {
+        delete program;
         result &= true;
     }
     

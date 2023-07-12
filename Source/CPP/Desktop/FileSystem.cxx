@@ -46,7 +46,10 @@ vector<const char *> *FileSystem::FileList()
     if (getcwd(applicationDirectory, sizeof(applicationDirectory)) != NULL)
     {
         char ssemApplicationDirectory[PATH_MAX];
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wformat-truncation"
         snprintf(ssemApplicationDirectory, PATH_MAX, "%s/../NuttX/SSEMApps", applicationDirectory);
+        #pragma GCC diagnostic pop
         DIR *directory = opendir(ssemApplicationDirectory);
         if (directory != NULL)
         {
@@ -90,7 +93,10 @@ vector<const char *> *FileSystem::Contents(const char *filename)
     if (getcwd(applicationDirectory, sizeof(applicationDirectory)) != NULL)
     {
         char fullpath[PATH_MAX];
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wformat-truncation"
         snprintf(fullpath, PATH_MAX, "%s/../NuttX/SSEMApps/%s", applicationDirectory, filename);
+        #pragma GCC diagnostic pop
         FILE *file = fopen(fullpath , "r");
         if (file != NULL)
         {

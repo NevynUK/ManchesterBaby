@@ -35,6 +35,7 @@ class Compiler
         static uint32_t GetStoreLineNumber(const char *);
         static uint32_t GetOperand(const char *);
         static uint32_t GetBinary(const char *);
+        static void CleanUp(vector<Compiler::TokenisedLine *> *tokens);
 };
 
 #endif // __COMPILER_HXX

@@ -11,6 +11,16 @@
 
 using namespace std;
 
+void Compiler::CleanUp(vector<Compiler::TokenisedLine *> *tokens)
+{
+    for (auto token : *tokens)
+    {
+        delete token;
+    }
+    tokens->clear();
+    delete tokens;
+}
+
 /**
  * @brief Read a file from the file system and compile the contents returning the
  *        compiled program as store lines.
@@ -42,28 +52,31 @@ StoreLines *Compiler::Compile(const vector<const char *> &program)
     StoreLines &sl = *storeLines;
     if (tokens->size() > 0)
     {
-        for (auto token : *tokens)
+        try
         {
-            uint32_t value = 0;
-            if ((token->opcode == Instruction::BIN) || (token->opcode == Instruction::NUM))
+            for (auto token : *tokens)
             {
-                value = token->operand;
+                uint32_t value = 0;
+                if ((token->opcode == Instruction::BIN) || (token->opcode == Instruction::NUM))
+                {
+                    value = token->operand;
+                }
+                else
+                {
+                    value = token->opcode << 13;
+                    value |= (token->operand & 0x1f);
+                }
+                sl[token->storeLineNumber].SetValue(value);
             }
-            else
-            {
-                value = token->opcode << 13;
-                value |= (token->operand & 0x1f);
-            }
-            Register *r = new Register(value);
-            sl[token->storeLineNumber] = *r;
         }
-        for (auto token : *tokens)
+        catch(const std::exception& e)
         {
-            delete token;
+            CleanUp(tokens);
+            delete storeLines;
+            throw e;
         }
-        tokens->clear();
-        delete tokens;
     }
+    CleanUp(tokens);
 
     return(storeLines);
 }
@@ -80,55 +93,64 @@ vector<Compiler::TokenisedLine *> *Compiler::Tokenise(const vector<const char *>
 {
     vector<Compiler::TokenisedLine *> *result = new vector<Compiler::TokenisedLine *>();
 
-    for (auto line : lines)
+    try
     {
-        char copyOfLine[Constants::LINE_LENGTH];
-        strcpy(copyOfLine, line);
-        char *text = strtok(copyOfLine, " ");
-        while (text != NULL)
+        for (auto line : lines)
         {
-            if (IsBlank(line) || IsComment(line))
+            char copyOfLine[Constants::LINE_LENGTH];
+            strcpy(copyOfLine, line);
+            char *text = strtok(copyOfLine, " ");
+            while (text != NULL)
             {
-                break;
-            }
-            uint32_t storeLineNumber = GetStoreLineNumber(text);
-            text = strtok(NULL, " ");
-            Instruction::opcodes_e opcode = Instructions::Opcode(text);
-            text = strtok(NULL, " ");
-            uint32_t operand = 0;
-            switch (opcode)
-            {
-                case Instruction::JMP:
-                case Instruction::JPR:
-                case Instruction::LDN:
-                case Instruction::STO:
-                case Instruction::SUB:
-                case Instruction::NUM: 
-                    operand = GetOperand(text);
+                if (IsBlank(line) || IsComment(line))
+                {
                     break;
-                case Instruction::BIN:
-                    operand = GetBinary(text);
-                    break;
-                default:
-                    if (!(IsBlank(text) || IsComment(text)))
-                    {
-                        throw runtime_error("Unexpected operand");
-                    }
-                    break;
+                }
+                uint32_t storeLineNumber = GetStoreLineNumber(text);
+                text = strtok(NULL, " ");
+                Instruction::opcodes_e opcode = Instructions::Opcode(text);
+                text = strtok(NULL, " ");
+                uint32_t operand = 0;
+                switch (opcode)
+                {
+                    case Instruction::JMP:
+                    case Instruction::JPR:
+                    case Instruction::LDN:
+                    case Instruction::STO:
+                    case Instruction::SUB:
+                    case Instruction::NUM: 
+                        operand = GetOperand(text);
+                        break;
+                    case Instruction::BIN:
+                        operand = GetBinary(text);
+                        break;
+                    default:
+                        if (!(IsBlank(text) || IsComment(text)))
+                        {
+                            throw runtime_error("Unexpected operand");
+                        }
+                        break;
+                }
+                text = strtok(NULL, " ");
+                if (!(IsBlank(text) || IsComment(text)))
+                {
+                    throw runtime_error("Unexpected text");
+                }
+                text = NULL;
+                TokenisedLine *tokenisedLine = new TokenisedLine();
+                tokenisedLine->storeLineNumber = storeLineNumber;
+                tokenisedLine->opcode = opcode;
+                tokenisedLine->operand = operand;
+                result->push_back(tokenisedLine);
             }
-            text = strtok(NULL, " ");
-            if (!(IsBlank(text) || IsComment(text)))
-            {
-                throw runtime_error("Unexpected text");
-            }
-            text = NULL;
-            TokenisedLine *tokenisedLine = new TokenisedLine();
-            tokenisedLine->storeLineNumber = storeLineNumber;
-            tokenisedLine->opcode = opcode;
-            tokenisedLine->operand = operand;
-            result->push_back(tokenisedLine);
         }
     }
+    catch(const std::exception& e)
+    {
+        CleanUp(result);
+        throw e;
+    }
+
     return(result);
 }
 
