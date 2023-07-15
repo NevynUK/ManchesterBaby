@@ -24,7 +24,7 @@ void ConsoleUserInterface::UpdateDisplayTube(StoreLines &storeLines) const
     {
         char *binary = storeLines[lineNumber].Binary();
         char *disassembled = storeLines[lineNumber].Disassemble();
-        printf("%4d: 0x%08x - %32s %-16s ; %d\n", lineNumber, (uint) storeLines[lineNumber].ReverseBits(), 
+        printf("%4d: 0x%08x - %32s %-16s ; %d\n", lineNumber, (uint) storeLines[lineNumber].ReverseBits(),
                                         binary, disassembled, storeLines[lineNumber].GetValue());
         delete[] disassembled;
         delete[] binary;
