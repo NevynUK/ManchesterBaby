@@ -16,10 +16,10 @@ INCLUDES := -I../NuttX/include
 all: $(appname)
 
 $(appname): $(objects)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $(appname) $(objects)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(DEFINES) -o $(appname) $(objects)
 
 %.o: %.cxx
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $*.o
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(DEFINES) -c $< -o $*.o
 
 clean:
 	$(RM) -f $(objects) $(appname)
