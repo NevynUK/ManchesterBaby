@@ -17,7 +17,9 @@ static const char *goodApplication[] =
     "16:   NUM 20",
     "08:   STOP",
     "18:   NUM 0",
-    "19:   BIN 0101"
+    "19:   BIN 0101",
+    "20:   NUM -989",
+    ""
 };
 
 static const char *invalidLineNumber[] = 
@@ -144,7 +146,7 @@ bool TestCompiler()
         return(false);
     }
 
-    vector<const char *> *program;
+    vector<const char *> *program = nullptr;
     StoreLines *storeLines;
     try
     {
