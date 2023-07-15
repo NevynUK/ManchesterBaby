@@ -1,41 +1,38 @@
 #include <iostream>
 #include "Instructions.hxx"
 #include "FileSystem.hxx"
+#include "Compiler.hxx"
+#include "StoreLines.hxx"
+#include "CPU.hxx"
+#include "ConsoleUserInterface.hxx"
 
 using namespace std;
 
-extern bool TestInstructions();
-extern bool TestRegister();
-extern bool TestStoreLines();
-extern bool TestCpu();
-extern bool TestCompiler();
-extern bool TestConsoleUserInterface();
-extern bool TestFileSystem();
+extern "C" int execute_unit_tests();
 
-void PrintPassOrFail(const string &test_name, bool result)
+extern "C" int main(int argc, char *argv[])
 {
-    if (result == true)
-    {
-        printf("PASS:");
-    }
-    else
-    {
-        printf("FAIL:");
-    }
-    printf(" %s\n", test_name.c_str());
-}
+#ifdef UNIT_TESTS
+    return(execute_unit_tests() ? 0 : -1);    
+#else
 
-extern "C" int main()
-{
     Instructions::PopulateLookupTable();
-    
-    PrintPassOrFail("Instructions", TestInstructions());
-    PrintPassOrFail("Register", TestRegister());
-    PrintPassOrFail("StoreLines", TestStoreLines());
-    PrintPassOrFail("CPU", TestCpu());
-    PrintPassOrFail("FileSystem", TestFileSystem());
-    PrintPassOrFail("Compiler", TestCompiler());
-    PrintPassOrFail("ConsoleUserInterface", TestConsoleUserInterface());
+    StoreLines *storeLines = Compiler::Compile("hfr989.ssem");
+    ConsoleUserInterface consoleUserInterface;
+    consoleUserInterface.UpdateDisplayTube(*storeLines);
+
+    Cpu *cpu = new Cpu(*storeLines);
+    cpu->Reset();
+    uint32_t instructionCount = 0;
+    while (!cpu->IsStopped())
+    {
+        cpu->SingleStep();
+        instructionCount++;
+    }
+
+    consoleUserInterface.UpdateDisplayTube(*storeLines);
+    printf("Executed %d instructions.\n", instructionCount);
+#endif
 
     return(0);
 }
