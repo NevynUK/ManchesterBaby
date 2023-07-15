@@ -10,5 +10,5 @@ RUN apt-get install build-essential valgrind -y
 
 WORKDIR /valgrind
 
-# docker build -t nevyn/valgrind:latest .
-# docker run --rm -tiv $PWD/..:/valgrind nevyn/valgrind:latest
+# docker build -t nevyn/devtools:latest .
+# docker run --rm -tiv $PWD/..:/project nevyn/devtools:latest
