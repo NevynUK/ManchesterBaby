@@ -7,6 +7,8 @@ class Constants
 {
     public:
         static const unsigned LINE_LENGTH = 128;
+
+        static const unsigned MAX_PATH_LENGTH = 256;
 };
 
 #endif // __CONSTANTS_HXX
