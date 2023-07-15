@@ -18,14 +18,14 @@ ConsoleUserInterface::~ConsoleUserInterface() { }
  */
 void ConsoleUserInterface::UpdateDisplayTube(StoreLines &storeLines) const
 {
-    printf("                 00000000001111111111222222222233\n");
-    printf("                 01234567890123456789012345678901\n");
+    printf("                   00000000001111111111222222222233\n");
+    printf("                   01234567890123456789012345678901\n");
     for (uint lineNumber = 0; lineNumber < storeLines.Size(); lineNumber++)
     {
         char *binary = storeLines[lineNumber].Binary();
         char *disassembled = storeLines[lineNumber].Disassemble();
-        printf("%4d: %08x - %32s %s\n", lineNumber, (uint) storeLines[lineNumber].GetValue(), 
-                                        binary, disassembled);
+        printf("%4d: 0x%08x - %32s %-16s ; %d\n", lineNumber, (uint) storeLines[lineNumber].ReverseBits(), 
+                                        binary, disassembled, storeLines[lineNumber].GetValue());
         delete[] disassembled;
         delete[] binary;
     }

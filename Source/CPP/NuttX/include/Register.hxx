@@ -93,12 +93,6 @@ class Register
          */
         void Negate() noexcept;
 
-    private:
-        /**
-         * @brief Value held in the register.
-         */
-        int32_t _value;
-
         /**
          * @brief Get the register value as SSEM bits.
          * 
@@ -108,6 +102,12 @@ class Register
          * @return int32_t SSEM integer representation of the register value.
          */
         int32_t ReverseBits() const noexcept;
+
+    private:
+        /**
+         * @brief Value held in the register.
+         */
+        int32_t _value;
 };
 
 #endif // __REGISTER_HXX
