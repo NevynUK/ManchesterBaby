@@ -137,7 +137,7 @@ vector<const char *> *FileSystem::Contents(const char *filename)
 {
     vector<const char *> *result = nullptr;
 
-    char fullpath[Constants::MaxPathLength];
+    char fullpath[Constants::MAX_PATH_LENGTH];
     snprintf(fullpath, Constants::LINE_LENGTH, "%s/%s", MOUNT_POINT, filename);
     FILE *file = fopen(fullpath , "r");
     if (file != NULL)
