@@ -162,7 +162,7 @@ vector<Compiler::TokenisedLine *> *Compiler::Tokenise(const vector<const char *>
  */
 uint32_t Compiler::GetStoreLineNumber(const char *line)
 {
-    unsigned long number = 0;
+    long number = 0;
     uint32_t result = 0;
     bool state = false;
 
@@ -174,8 +174,8 @@ uint32_t Compiler::GetStoreLineNumber(const char *line)
             copyOfLine[strlen(line) - 1] = '\0';
             if (IsNumber(copyOfLine))
             {
-                number = strtoul(copyOfLine, NULL, 10);
-                if (number <= ((uint32_t) 0xffffffff))
+                number = strtol(copyOfLine, NULL, 10);
+                if ((number >= 0) && (number <= UINT32_MAX))
                 {
                     result = number;
                     state = true;
@@ -198,16 +198,20 @@ uint32_t Compiler::GetStoreLineNumber(const char *line)
  * @param line Part of the line to be converted
  * @return uint32_t Opcode representing the text.
  */
-uint32_t Compiler::GetOperand(const char *line)
+int32_t Compiler::GetOperand(const char *line)
 {
-    uint32_t number = 0;
+    long number = 0;
     bool state = false;
 
     if ((line != NULL) && (strlen(line) > 0))
     {
         if (IsNumber(line))
         {
-            number = strtoul(line, NULL, 10) & 0xffffffff;
+            number = strtol(line, NULL, 10);
+            if ((number > INT32_MAX) || (number < INT32_MIN))
+            {
+                throw runtime_error("Operand out of range");
+            }
             state = true;
         }
     }
@@ -216,7 +220,7 @@ uint32_t Compiler::GetOperand(const char *line)
         throw runtime_error("Invalid operand");
     }
 
-    return(number);
+    return((int32_t) number);
 }
 
 /**
@@ -274,9 +278,19 @@ bool Compiler::IsNumber(const char *line)
 
     for (size_t index = 0; index < strlen(line); index++)
     {
-        if (!isdigit(line[index]))
+        if (index == 0)
         {
-            return(false);
+            if ((line[0] != '-') && (line[0] != '+') && (!isdigit(line[0])))
+            {
+                return(false);
+            }
+        }
+        else
+        {
+            if (!isdigit(line[index]))
+            {
+                return(false);
+            }
         }
     }
     return(true);
