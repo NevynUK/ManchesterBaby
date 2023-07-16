@@ -22,7 +22,7 @@ include $(APPDIR)/Make.defs
 
 # SSEM Application
 
-MAINSRC = Core/ssem_main.cxx
+MAINSRC = NuttX/ssem_main.cxx
 
 #
 #	We need to ignnore the ssem_main.cxx file here as it is included in the MAINSRC
