@@ -22,6 +22,7 @@ extern "C" int main(int argc, char *argv[])
     return(execute_unit_tests() ? 0 : -1);
 #else
     Instructions::PopulateLookupTable();
+    FileSystem::Register();
     StoreLines *storeLines = Compiler::Compile("hfr989.ssem");
     ConsoleUserInterface consoleUserInterface;
     consoleUserInterface.UpdateDisplayTube(*storeLines);
