@@ -46,7 +46,7 @@ extern "C" int main(int argc, char *argv[])
     printf("Executed %u instructions in %d nanoseconds.\n", instructionCount, spec2.tv_nsec - spec.tv_nsec);
 
     delete storeLines;
-
+    delete cpu;
 #endif
 
     return(0);

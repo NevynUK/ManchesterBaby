@@ -1,4 +1,6 @@
 #include <iostream>
+#include <time.h>
+
 #include "Instructions.hxx"
 #include "FileSystem.hxx"
 #include "Compiler.hxx"
@@ -22,7 +24,6 @@ extern "C" int main(int argc, char *argv[])
     return(execute_unit_tests() ? 0 : -1);
 #else
     Instructions::PopulateLookupTable();
-    FileSystem::Register();
     StoreLines *storeLines = Compiler::Compile("hfr989.ssem");
     ConsoleUserInterface consoleUserInterface;
     consoleUserInterface.UpdateDisplayTube(*storeLines);
@@ -30,15 +31,24 @@ extern "C" int main(int argc, char *argv[])
     Cpu *cpu = new Cpu(*storeLines);
     cpu->Reset();
     uint instructionCount = 0;
+
+    struct timespec spec, spec2;
+    clock_gettime(CLOCK_REALTIME, &spec);
+
     while (!cpu->IsStopped())
     {
         cpu->SingleStep();
         instructionCount++;
     }
 
+    clock_gettime(CLOCK_REALTIME, &spec2);
+
     printf("\n\n\nProgram execution complete.\n");
     consoleUserInterface.UpdateDisplayTube(*storeLines);
-    printf("Executed %u instructions.\n", instructionCount);
+    printf("Executed %u instructions in %d nanoseconds.\n", instructionCount, spec2.tv_nsec - spec.tv_nsec);
+
+    delete storeLines;
+    delete cpu;
 #endif
 
     return(0);
