@@ -68,6 +68,8 @@
         "algorithm": "cpp"
     },
     "cSpell.words": [
-        "SSEM"
+        "NuttX",
+        "SSEM",
+        "valgrind"
     ]
 }
