@@ -1,7 +1,5 @@
 #include "Instructions.hxx"
 
-#include <stdexcept>
-
 /**
  * @brief Set up the static data in this class.
  */
@@ -10,7 +8,7 @@ std::vector<Instruction> Instructions::_instructions;
 /**
  * @brief Populate the instruction lookup table.
  * 
- * Note: This is necessary as the NuttX compiler does not support the initialisation of a vector
+ * Note: This is necessary as the NuttX library does not support the initialisation of a vector
  * with a list of objects.
  */
 void Instructions::PopulateLookupTable()
@@ -61,7 +59,7 @@ Instruction::opcodes_e Instructions::Opcode(const std::string &mnemonic)
  * @note If the opcode is not found, an invalid_argment exception is thrown.
  * 
  * @param opcode Opcode to look up.
- * @return const std::string& The preferred mnemonic for the opcode.
+ * @return const char * The preferred mnemonic for the opcode.
  */
 const char *Instructions::Mnemonic(Instruction::opcodes_e opcode)
 {
@@ -80,7 +78,7 @@ const char *Instructions::Mnemonic(Instruction::opcodes_e opcode)
  * @brief Description of the action of the opcode.
  * 
  * @param opcode Opcode to look up.
- * @return const std::string& Description of the preferred mnemonic for the specified opcode.
+ * @return const char * Description of the preferred mnemonic for the specified opcode.
  */
 const char *Instructions::Description(Instruction::opcodes_e opcode)
 {

@@ -11,6 +11,11 @@
 
 using namespace std;
 
+/**
+ * @brief Delete the tokens and release any memory associated with them.
+ * 
+ * @param tokens Vector of tokens to be deleted.
+ */
 void Compiler::CleanUp(vector<Compiler::TokenisedLine *> *tokens)
 {
     for (auto token : *tokens)
@@ -35,7 +40,7 @@ StoreLines *Compiler::Compile(const char *filename)
 }
 
 /**
- * @brief Compiler the program contained in the vector of const char * pointers.
+ * @brief Compile the program contained in the vector of const char * pointers.
  * 
  * @param program Vector containing char * lines of text to be compiled.
  * @return StoreLines* StoreLines containing the compiled program.
@@ -63,8 +68,8 @@ StoreLines *Compiler::Compile(const vector<const char *> &program)
                 }
                 else
                 {
-                    value = token->opcode << 13;
-                    value |= (token->operand & 0x1f);
+                    value = token->opcode << Constants::OPCODE_SHIFT;
+                    value |= (token->operand & Constants::LINE_NUMBER_MASK);
                 }
                 sl[token->storeLineNumber].SetValue(value);
             }
@@ -159,6 +164,7 @@ vector<Compiler::TokenisedLine *> *Compiler::Tokenise(const vector<const char *>
  * 
  * @param line First part of the line being compiled.
  * @return uint32_t StoreLine number for this line.
+ * @throws runtime_error If the line number is invalid.
  */
 uint32_t Compiler::GetStoreLineNumber(const char *line)
 {
@@ -193,10 +199,11 @@ uint32_t Compiler::GetStoreLineNumber(const char *line)
 }
 
 /**
- * @brief Convert the text into an opcode.
+ * @brief Convert the text into an operand.
  * 
  * @param line Part of the line to be converted
  * @return uint32_t Opcode representing the text.
+ * @throws runtime_error If the opcode is invalid or the value is out of range.
  */
 int32_t Compiler::GetOperand(const char *line)
 {
@@ -228,6 +235,7 @@ int32_t Compiler::GetOperand(const char *line)
  * 
  * @param line Partial line to be converted.
  * @return uint32_t Number represented by the value.
+ * @throws runtime_error If the value is not a binary number
  */
 uint32_t Compiler::GetBinary(const char *line)
 {
@@ -263,7 +271,7 @@ bool Compiler::IsComment(const char *line)
 }
 
 /**
- * @brief Can the text be a number (all characters are digits)
+ * @brief Can the text be a number (all characters are digits possibly starting with + or -).
  * 
  * @param line Text to be checked.
  * @return true If the text could be a number.
@@ -309,7 +317,7 @@ bool Compiler::IsBlank(const char *line)
 }
 
 /**
- * @brief Is the text composed solely of 0s and 1s?
+ * @brief Is the text composed solely of 0s and 1s and less than 32 bits in length?
  * 
  * @param line Text to be checked.
  * @return true If the text is binary.

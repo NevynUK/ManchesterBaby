@@ -46,10 +46,7 @@ vector<const char *> *FileSystem::FileList()
     if (getcwd(applicationDirectory, sizeof(applicationDirectory)) != NULL)
     {
         char ssemApplicationDirectory[PATH_MAX];
-        #pragma GCC diagnostic push
-        #pragma GCC diagnostic ignored "-Wformat-truncation"
         snprintf(ssemApplicationDirectory, PATH_MAX, "%s/../NuttX/SSEMApps", applicationDirectory);
-        #pragma GCC diagnostic pop
         DIR *directory = opendir(ssemApplicationDirectory);
         if (directory != NULL)
         {
@@ -79,7 +76,7 @@ vector<const char *> *FileSystem::FileList()
  * 
  * Assumptions:
  *  - The file contains text data only.
- *  - Lines are less than 128 bytes long.
+ *  - Lines are less than Constants::LINE_LENGTH bytes long.
  * 
  * @param filename Name of the file to be read.
  * 
@@ -93,10 +90,7 @@ vector<const char *> *FileSystem::Contents(const char *filename)
     if (getcwd(applicationDirectory, sizeof(applicationDirectory)) != NULL)
     {
         char fullpath[PATH_MAX];
-        #pragma GCC diagnostic push
-        #pragma GCC diagnostic ignored "-Wformat-truncation"
         snprintf(fullpath, PATH_MAX, "%s/../NuttX/SSEMApps/%s", applicationDirectory, filename);
-        #pragma GCC diagnostic pop
         FILE *file = fopen(fullpath , "r");
         if (file != NULL)
         {

@@ -100,6 +100,7 @@ bool Cpu::SingleStep()
     uint32_t lineNumber = _ci.LineNumber();
     if (lineNumber >= _storeLines.Size())
     {
+        _stopped = true;
         return(false);
     }
     _pi = _storeLines[lineNumber];

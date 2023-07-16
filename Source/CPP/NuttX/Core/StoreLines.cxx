@@ -29,6 +29,7 @@ StoreLines::~StoreLines()
 
  * @param index Store line being requested.
  * @return Register& Reference to the store line requested
+ * @throw std::invalid_argument Thrown if the index is out of range.
  */
 Register &StoreLines::operator[](uint index)
 {

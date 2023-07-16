@@ -1,41 +1,44 @@
 #include <iostream>
 #include "Instructions.hxx"
 #include "FileSystem.hxx"
+#include "Compiler.hxx"
+#include "StoreLines.hxx"
+#include "CPU.hxx"
+#include "ConsoleUserInterface.hxx"
 
 using namespace std;
 
-extern bool TestInstructions();
-extern bool TestRegister();
-extern bool TestStoreLines();
-extern bool TestCpu();
-extern bool TestCompiler();
-extern bool TestConsoleUserInterface();
-extern bool TestFileSystem();
+/**
+ * @brief External reference to the method that will run the unit tests.
+ */
+extern "C" int execute_unit_tests();
 
-void PrintPassOrFail(const string &test_name, bool result)
+/**
+ * @brief Main program loop.
+ */
+extern "C" int main(int argc, char *argv[])
 {
-    if (result == true)
-    {
-        printf("PASS:");
-    }
-    else
-    {
-        printf("FAIL:");
-    }
-    printf(" %s\n", test_name.c_str());
-}
-
-extern "C" int main()
-{
+#ifdef UNIT_TESTS
+    return(execute_unit_tests() ? 0 : -1);
+#else
     Instructions::PopulateLookupTable();
-    
-    PrintPassOrFail("Instructions", TestInstructions());
-    PrintPassOrFail("Register", TestRegister());
-    PrintPassOrFail("StoreLines", TestStoreLines());
-    PrintPassOrFail("CPU", TestCpu());
-    PrintPassOrFail("FileSystem", TestFileSystem());
-    PrintPassOrFail("Compiler", TestCompiler());
-    PrintPassOrFail("ConsoleUserInterface", TestConsoleUserInterface());
+    StoreLines *storeLines = Compiler::Compile("hfr989.ssem");
+    ConsoleUserInterface consoleUserInterface;
+    consoleUserInterface.UpdateDisplayTube(*storeLines);
+
+    Cpu *cpu = new Cpu(*storeLines);
+    cpu->Reset();
+    uint instructionCount = 0;
+    while (!cpu->IsStopped())
+    {
+        cpu->SingleStep();
+        instructionCount++;
+    }
+
+    printf("\n\n\nProgram execution complete.\n");
+    consoleUserInterface.UpdateDisplayTube(*storeLines);
+    printf("Executed %u instructions.\n", instructionCount);
+#endif
 
     return(0);
 }

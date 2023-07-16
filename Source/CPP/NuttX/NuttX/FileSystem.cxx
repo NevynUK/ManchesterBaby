@@ -127,7 +127,7 @@ vector<const char *> *FileSystem::FileList()
  * 
  * Assumptions:
  *  - The file contains text data only.
- *  - Lines are less than 128 bytes long.
+ *  - Lines are less than Constants::LINE_LENGTH bytes long.
  * 
  * @param filename Name of the file to be read.
  * 
@@ -137,7 +137,7 @@ vector<const char *> *FileSystem::Contents(const char *filename)
 {
     vector<const char *> *result = nullptr;
 
-    char fullpath[Constants::MAX_PATH_LENGTH];
+    char fullpath[PATH_MAX];
     snprintf(fullpath, Constants::LINE_LENGTH, "%s/%s", MOUNT_POINT, filename);
     FILE *file = fopen(fullpath , "r");
     if (file != NULL)

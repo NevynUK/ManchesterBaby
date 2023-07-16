@@ -4,7 +4,7 @@
  * @brief Construct a new Instruction::Instruction object
  * 
  * @param mnemonic Mnemonic for this opcode.
- * @param preferred_mnemonic Is the the preferred mnemonic for the opcode/
+ * @param preferred_mnemonic Is the the preferred mnemonic for the opcode?
  * @param opcode Opcode for the instruction.
  * @param description Description of the action of the instruction.
  */

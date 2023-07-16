@@ -149,7 +149,7 @@ int32_t Register::ReverseBits() const noexcept
  */
 uint Register::LineNumber() const noexcept
 {
-    return(_value & 0x1f);
+    return(_value & Constants::LINE_NUMBER_MASK);
 }
 
 /**
@@ -160,7 +160,7 @@ uint Register::LineNumber() const noexcept
  */
 uint Register::Opcode() const noexcept
 {
-    return((_value >> 13) & 0x7);
+    return((_value >> Constants::OPCODE_SHIFT) & Constants::OPCODE_MASK);
 }
 
 /**
