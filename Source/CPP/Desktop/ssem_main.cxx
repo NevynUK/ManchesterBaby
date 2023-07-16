@@ -8,8 +8,14 @@
 
 using namespace std;
 
+/**
+ * @brief External reference to the method that will run the unit tests.
+ */
 extern "C" int execute_unit_tests();
 
+/**
+ * @brief Main program loop.
+ */
 extern "C" int main(int argc, char *argv[])
 {
 #ifdef UNIT_TESTS
@@ -22,7 +28,7 @@ extern "C" int main(int argc, char *argv[])
 
     Cpu *cpu = new Cpu(*storeLines);
     cpu->Reset();
-    uint32_t instructionCount = 0;
+    uint instructionCount = 0;
     while (!cpu->IsStopped())
     {
         cpu->SingleStep();
@@ -31,7 +37,7 @@ extern "C" int main(int argc, char *argv[])
 
     printf("\n\n\nProgram execution complete.\n");
     consoleUserInterface.UpdateDisplayTube(*storeLines);
-    printf("Executed %d instructions.\n", instructionCount);
+    printf("Executed %u instructions.\n", instructionCount);
 #endif
 
     return(0);
