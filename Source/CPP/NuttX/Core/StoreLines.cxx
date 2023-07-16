@@ -19,6 +19,10 @@ StoreLines::StoreLines(uint size)
  */
 StoreLines::~StoreLines()
 {
+    for (auto line : _lines)
+    {
+        line.~Register();
+    }
     _lines.clear();
 }
 

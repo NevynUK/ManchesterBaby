@@ -29,15 +29,24 @@ extern "C" int main(int argc, char *argv[])
     Cpu *cpu = new Cpu(*storeLines);
     cpu->Reset();
     uint instructionCount = 0;
+
+    struct timespec spec, spec2;
+    clock_gettime(CLOCK_REALTIME, &spec);
+
     while (!cpu->IsStopped())
     {
         cpu->SingleStep();
         instructionCount++;
     }
 
+    clock_gettime(CLOCK_REALTIME, &spec2);
+
     printf("\n\n\nProgram execution complete.\n");
     consoleUserInterface.UpdateDisplayTube(*storeLines);
-    printf("Executed %u instructions.\n", instructionCount);
+    printf("Executed %u instructions in %d nanoseconds.\n", instructionCount, spec2.tv_nsec - spec.tv_nsec);
+
+    delete storeLines;
+
 #endif
 
     return(0);

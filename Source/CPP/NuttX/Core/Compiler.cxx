@@ -36,7 +36,14 @@ void Compiler::CleanUp(vector<Compiler::TokenisedLine *> *tokens)
 StoreLines *Compiler::Compile(const char *filename)
 {
     vector<const char *> *program = FileSystem::Contents(filename);
-    return(Compile(*program));
+    StoreLines *result = Compile(*program);
+
+    for (auto line : *program)
+    {
+        free((void *) line);
+    }
+    delete program;
+    return(result);
 }
 
 /**
