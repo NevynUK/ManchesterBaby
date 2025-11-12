@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "PCIE-098-02-X-D-TH")(type "KiCad")(uri "/Users/markstevens/GitHub/ManchesterBaby/Hardware/Libraries/SAM9745-ND (PCIe 98 Positions)/PCIE-098-02-X-D-TH.kicad_sym")(options "")(descr ""))
+)

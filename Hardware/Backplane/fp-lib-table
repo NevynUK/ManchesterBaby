@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "SAM9745-ND (PCIe 98 Positions)")(type "KiCad")(uri "/Users/markstevens/GitHub/ManchesterBaby/Hardware/Libraries/SAM9745-ND (PCIe 98 Positions)")(options "")(descr ""))
+)
