@@ -1,0 +1,35 @@
+# This file was generated using idf.py save-defconfig. It can be edited manually.
+# Espressif IoT Development Framework (ESP-IDF) 5.5.1 Project Minimal Configuration
+#
+CONFIG_IDF_TARGET="esp32p4"
+CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
+
+# Chip revision: Tab5 uses ESP32-P4 silicon revision 0.x/1.x.
+# Without ESP32P4_SELECTS_REV_LESS_V3, Kconfig only offers the {300,301} choice
+# set and builds a bootloader that esptool refuses to flash on this chip.
+CONFIG_ESP32P4_SELECTS_REV_LESS_V3=y
+CONFIG_ESP32P4_REV_MIN_1=y
+
+# PSRAM — ESP32-P4 uses HEX PSRAM (not OCT); 200MHz required for MIPI-DSI framebuffer DMA
+# CONFIG_SPIRAM_SPEED_200M depends on IDF_EXPERIMENTAL_FEATURES — both must be set together
+CONFIG_IDF_EXPERIMENTAL_FEATURES=y
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_SPEED_200M=y
+
+# Partition table — 16MB flash requires a custom layout; default single-app gives only 1MB
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
+
+# C++ Compiler Options
+CONFIG_COMPILER_CXX_EXCEPTIONS=y
+CONFIG_COMPILER_CXX_EXCEPTIONS_EMG_POOL_SIZE=0
+
+# File system related configuration.
+CONFIG_FATFS_LFN_HEAP=y
+
+# app_main hosts the SSEM CPU execution loop; increase its stack accordingly.
+CONFIG_ESP_MAIN_TASK_STACK_SIZE=16384
+
+# Turn off the idle task watchdogs.
+# CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU0 is not set
+# CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU1 is not set

@@ -1,0 +1,15 @@
+idf_component_register(
+    SRCS
+        "SDCardTest.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../../components/Tab5/SDCard.cpp"
+    INCLUDE_DIRS
+        "."
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../../components/Tab5"
+    REQUIRES
+        driver
+        sdmmc
+        fatfs
+        unity
+        esp_hw_support
+        log
+)

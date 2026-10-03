@@ -1,0 +1,46 @@
+#include "StoreLines.hpp"
+
+/**
+ * @brief Construct a new StoreLines object
+ *
+ * @param size Number of lines in this object.
+ */
+StoreLines::StoreLines(uint size) : _lines(size)
+{
+}
+
+/**
+ * @brief Destroy the StoreLines object
+ */
+StoreLines::~StoreLines() = default;
+
+/**
+ * @brief Get a reference to a store line.
+ *
+ * @note If the index is out of range, an invalid_argment exception is thrown.
+
+ * @param index Store line being requested.
+ * @return Register& Reference to the store line requested
+ * @throw std::invalid_argument Thrown if the index is out of range.
+ */
+Register &StoreLines::operator[](uint index)
+{
+    if (index >= _lines.size())
+    {
+        throw(std::invalid_argument("Index out of range"));
+    }
+
+    return (_lines[index]);
+}
+
+/**
+ * @brief Clear all of the store lines without resizing (so sets all to 0).
+ */
+void StoreLines::Clear()
+{
+    for (auto &line: _lines)
+    {
+        line.SetValue(0);
+    }
+    _dirty = true;
+}

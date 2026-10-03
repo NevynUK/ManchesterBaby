@@ -1,0 +1,19 @@
+# Rtc test app — minimal config for ESP32-P4 on Tab5 hardware.
+CONFIG_IDF_TARGET="esp32p4"
+CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
+
+# Chip revision: the Tab5 uses ESP32-P4 silicon revision 0.x/1.x (reported by
+# esptool as 'v1.0').  ESP32P4_SELECTS_REV_LESS_V3 must be set first to unlock
+# the low-revision choice set; without it Kconfig only offers {300, 301}.
+CONFIG_ESP32P4_SELECTS_REV_LESS_V3=y
+CONFIG_ESP32P4_REV_MIN_1=y
+
+# Disable Task Watchdog Timer so long vTaskDelay calls in the tests (e.g. the
+# 7-second minute-boundary test) do not starve the IDLE task.
+CONFIG_ESP_TASK_WDT_EN=n
+
+# PSRAM — ESP32-P4 uses HEX PSRAM (not OCT); 200MHz required for MIPI-DSI framebuffer DMA
+# CONFIG_SPIRAM_SPEED_200M depends on IDF_EXPERIMENTAL_FEATURES — both must be set together
+CONFIG_IDF_EXPERIMENTAL_FEATURES=y
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_SPEED_200M=y

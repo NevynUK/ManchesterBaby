@@ -1,0 +1,14 @@
+idf_component_register(
+    SRCS
+        "RtcTest.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../../components/Tab5/Rtc.cpp"
+    INCLUDE_DIRS
+        "."
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../../components/Tab5"
+    REQUIRES
+        driver
+        esp_driver_i2c
+        unity
+        freertos
+        log
+)

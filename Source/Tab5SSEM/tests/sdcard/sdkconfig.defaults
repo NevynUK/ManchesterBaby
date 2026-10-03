@@ -1,0 +1,18 @@
+# SDCard test app — minimal config for ESP32-P4 on Tab5 hardware.
+# No PSRAM is needed for this test project.
+CONFIG_IDF_TARGET="esp32p4"
+
+# Chip revision: the Tab5 uses ESP32-P4 silicon revision 0.x/1.x (reported by
+# esptool as 'v1.0').  ESP32P4_SELECTS_REV_LESS_V3 must be set first to unlock
+# the low-revision choice set; without it Kconfig only offers {300, 301}.
+CONFIG_ESP32P4_SELECTS_REV_LESS_V3=y
+CONFIG_ESP32P4_REV_MIN_1=y
+
+# Enable long filename support in FATFS.
+CONFIG_FATFS_LFN_HEAP=y
+
+# Disable Task Watchdog Timer for the test application.
+# unity_run_menu() blocks the main task on UART input, which would otherwise
+# starve the IDLE task and trigger the TWDT within the default 5-second window.
+CONFIG_ESP_TASK_WDT_EN=n
+

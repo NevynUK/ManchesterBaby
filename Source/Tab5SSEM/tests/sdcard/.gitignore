@@ -1,0 +1,9 @@
+build/
+sdkconfig
+sdkconfig.old
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/

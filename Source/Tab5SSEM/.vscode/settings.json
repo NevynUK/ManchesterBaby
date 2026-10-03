@@ -1,0 +1,48 @@
+{
+    "C_Cpp.intelliSenseEngine": "default",
+    "github.copilot.chat.codeGeneration.instructions": [
+        {
+            "file": ".github/copilot-instructions.md"
+        }
+    ],
+    "github.copilot.chat.commitMessageGeneration.instructions": [
+        {
+            "file": ".github/copilot-commit-message-instructions.md"
+        }
+    ],
+    "github.copilot.chat.reviewSelection.instructions": [
+        {
+            "file": ".github/copilot-instructions.md"
+        }
+    ],
+    "idf.customExtraVars": {
+        "OPENOCD_SCRIPTS": "/Users/markstevens/.espressif/tools/openocd-esp32/v0.12.0-esp32-20240318/openocd-esp32/share/openocd/scripts",
+        "ESP_ROM_ELF_DIR": "/Users/markstevens/.espressif/tools/esp-rom-elfs/20240305/"
+    },
+    "idf.espIdfPath": "/Users/markstevens/esp/esp-idf",
+    "idf.openOcdConfigs": [
+        "board/esp32-wrover-kit-3.3v.cfg"
+    ],
+    "idf.port": "/dev/tty.usbserial-210",
+    "idf.toolsPath": "/Users/markstevens/.espressif",
+    "files.associations": {
+        "chrono": "cpp",
+        "functional": "cpp",
+        "compare": "cpp",
+        "cstdint": "cpp",
+        "cstdlib": "cpp",
+        "array": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "span": "cpp",
+        "*.tcc": "cpp",
+        "limits": "cpp",
+        "type_traits": "cpp",
+        "freertosconfig.h": "c"
+    },
+    "idf.flashType": "UART",
+    "cSpell.words": [
+        "lvgl"
+    ],
+    "idf.currentSetup": "/Users/markstevens/.espressif/v6.0/esp-idf"
+}
