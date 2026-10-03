@@ -144,10 +144,17 @@ class ManchesterBaby:
 #
 #------------------------------------------------------------------------------
 if (__name__ == '__main__'):
-    import os
+    import argparse
+    import sys
     import time
+    parser = argparse.ArgumentParser(description = 'Assemble and run a Manchester Baby (SSEM) program.')
+    parser.add_argument('fileName', help = 'Assembler source file to run (for example Sources/hfr989.ssem)')
+    arguments = parser.parse_args()
     baby = ManchesterBaby()
-    baby.Assembler(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Sources', 'hfr989.ssem'))
+    try:
+        baby.Assembler(arguments.fileName)
+    except (OSError, ValueError) as error:
+        sys.exit('Error: {}'.format(error))
     baby.Print()
     start = time.monotonic()
     print('\nExecuting program:')
