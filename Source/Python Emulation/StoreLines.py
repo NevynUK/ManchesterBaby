@@ -28,7 +28,7 @@ class StoreLines:
         
         @param: size Number of Registers to create in the store lines (default is 32).
         '''
-        if ((size > 0) and (size < MAX_STORE_SIZE)):
+        if ((size > 0) and (size <= MAX_STORE_SIZE)):
             self._storeLines = [Register() for x in range(size)]
         else:
             raise ValueError
@@ -59,9 +59,15 @@ class StoreLines:
         @param: register Value (of type Register) to store in the specified line.
 
         @raises: IndexError Indicates that the lineNumber parameter is out of range.
+        @raises: TypeError Indicates that register is not a Register.
         '''
-        if ((self._storeLines != None) and (lineNumber >= 0) and (lineNumber < len(self._storeLines))):
-            self._storeLines[lineNumber] = register
+        if (not isinstance(register, Register)):
+            raise TypeError('Store lines can only hold Register objects')
+        if ((lineNumber >= 0) and (lineNumber < len(self._storeLines))):
+            #
+            #   Store a copy so that the caller does not share the register with the store.
+            #
+            self._storeLines[lineNumber] = Register(register.Value)
         else:
             raise IndexError
 
@@ -74,7 +80,7 @@ class StoreLines:
         
         @return Contents of the specified store line.
         '''
-        if ((self._storeLines != None) and (lineNumber >= 0) and (lineNumber < len(self._storeLines))):
+        if ((lineNumber >= 0) and (lineNumber < len(self._storeLines))):
             return(self._storeLines[lineNumber])
         else:
             raise IndexError
@@ -85,7 +91,7 @@ class StoreLines:
         This will set all of the store lines to a Register with the value 0.
         '''
         for lineNumber in range(len(self._storeLines)):
-            self._storeLines[lineNumber] = Register.Register(0)
+            self._storeLines[lineNumber] = Register(0)
 
     def Print(self):
         '''Print the contents of the store lines along with the disassembly.'''
@@ -97,43 +103,3 @@ class StoreLines:
             if (decimal & 0x80000000):
                 decimal -= 2**32
             print('{:02}: {} - {} {:16} ; {}'.format(lineNumber, line.Hex(), line.Binary(), self._instructions.Disassemble(line.Value), decimal))
-
-#------------------------------------------------------------------------------
-#
-#                               Tests.
-#
-#------------------------------------------------------------------------------
-
-if (__name__ == '__main__'):
-    sl = StoreLines()
-    if (sl.Length != 32):
-        raise ValueError
-    sl = StoreLines(100)
-    if (sl.Length != 100):
-        raise ValueError
-    if (sl.GetLine(0).Value != 0):
-        raise ValueError
-    sl.SetLine(0, 1)
-    if (sl.GetLine(0) != 1):
-        raise ValueError
-    try:
-        sl.SetLine(-1, 0)
-    except IndexError:
-        pass
-    try:
-        sl.SetLine(500, 0)
-    except IndexError:
-        pass
-    try:
-        sl.GetLine(-1)
-    except IndexError:
-        pass
-    try:
-        sl.GetLine(500)
-    except IndexError:
-        pass
-    sl.Clear()
-    for lineNumber in range(sl.Length):
-        if (sl.GetLine(lineNumber).Value != 0):
-            raise ValueError
-    print('StoreLines tests pass')

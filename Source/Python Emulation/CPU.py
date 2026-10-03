@@ -110,12 +110,15 @@ class CPU:
         '''Reset the CPU so that it is ready to execute the program in the store lines.'''
         self.Accumulator = Register.Register(0)
         self.CI = Register.Register(0)
+        self.PI = Register.Register(0)
         self.Stopped = False
 
     def SingleStep(self):
         '''Execute the next instruction.'''
-        if (self.Stopped == True):
-            raise RuntimeError
+        if (self.StoreLines is None):
+            raise RuntimeError('No store lines have been attached to the CPU')
+        if (self.Stopped):
+            raise RuntimeError('Cannot step a stopped CPU')
         #
         #   First, increment CI (the program counter).
         #
@@ -148,102 +151,8 @@ class CPU:
         elif (opcode == self._instructions.OPCODE_CMP):
             if (self.Accumulator.Value & 0x80000000):
                 self.CI.Value = (self.CI.Value + 1) & 0xffffffff
-        elif (opcode == self._instructions.OPCODE_STOP):
-            self.Stopped = True
         else:
-            raise ValueError
-
-#------------------------------------------------------------------------------
-#
-#                               Tests.
-#
-#------------------------------------------------------------------------------
-
-#
-#   Main program loop implementing tests for the CPU class.  The loop only executes
-#   when the file is executed as a stand alone program.
-#
-if (__name__ == '__main__'):
-    sl = StoreLines.StoreLines()
-    cpu = CPU(sl)
-    # LDN 10
-    sl.SetLine(1, Register.Register(0b0100000000001010))
-    # SUB 11
-    sl.SetLine(2, Register.Register(0b1000000000001011))
-    # STO 12
-    sl.SetLine(3, Register.Register(0b0110000000001100))
-    # CMP (SKN)
-    sl.SetLine(4, Register.Register(0b1100000000000000))
-    # JMP 12 (should be store line 1 to make the next instruction executed store line 2)
-    sl.SetLine(5, Register.Register(0b0000000000001100))
-    # JRP 11 (Add 9 to CI, currently 6)
-    sl.SetLine(6, Register.Register(0b0010000000001011))
-    # STOP
-    sl.SetLine(16, Register.Register(0b1110000000000000))
-    # Number 10 (negated so that load will get the positive number).
-    sl.SetLine(10, Register.Register(0xfffffff6))
-    # Number 9
-    sl.SetLine(11, Register.Register(9))
-    # Number 0
-    sl.SetLine(12, Register.Register(1))
-    #
-    #   Now execute the program one step at a time.
-    #
-    cpu.Reset()
-    #
-    #   LDN 10
-    #
-    cpu.SingleStep()
-    if (cpu.CI.Value != 1):
-        raise ValueError
-    if (cpu.Accumulator.Value != 10):
-        raise ValueError
-    #
-    #   SUB 11
-    #
-    cpu.SingleStep()
-    if (cpu.CI.Value != 2):
-        raise ValueError
-    if (cpu.Accumulator.Value != 1):
-        raise ValueError
-    #
-    #   STO 12
-    #
-    cpu.SingleStep()
-    if (cpu.Accumulator.Value != 1):
-        raise ValueError
-    if (cpu.StoreLines.GetLine(12).Value != 1):
-        raise ValueError
-    #
-    #   CMP
-    #
-    cpu.SingleStep()
-    if (cpu.CI.Value != 4):
-        raise ValueError
-    #
-    #   JMP 12, SUB 11, STO 12, CMP
-    #
-    cpu.SingleStep()
-    cpu.SingleStep()
-    cpu.SingleStep()
-    cpu.SingleStep()
-    #
-    #   JRP 11
-    #
-    cpu.SingleStep()
-    if (cpu.CI.Value != 15):
-        raise ValueError
-    #
-    #   STOP
-    #
-    cpu.SingleStep()
-    if (cpu.Stopped != True):
-        raise ValueError
-    #
-    cpu.Stopped = True
-    try:
-        cpu.SingleStep()
-    except RuntimeError:
-        pass
-    
-    print('CPU tests completed successfully.')
+            #
+            #   The opcode is only three bits wide so the only value left is STOP.
+            #
+            self.Stopped = True

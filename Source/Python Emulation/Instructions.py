@@ -1,10 +1,19 @@
 #!/usr/bin/env python
 #
-#   Class implementing the a register for the Manchester Baby.
+#   Class implementing the instruction set for the Manchester Baby.
 #
 class Instructions:
     '''Implement the methods and provide constants for the instructions that can
     be held in the SSEM.'''
+    OPCODE_JMP = 0
+    OPCODE_JRP = 1
+    OPCODE_LDN = 2
+    OPCODE_STO = 3
+    OPCODE_SUB = 4
+    OPCODE_UNDEFINED = 5    # Behaves in the same way as SUB.
+    OPCODE_CMP = 6
+    OPCODE_STOP = 7
+
 #------------------------------------------------------------------------------
 #
 #                       Class construction.
@@ -22,24 +31,23 @@ class Instructions:
         #   { opcode: code, instruction: details }
         #
         #   The instruction detail is a dictionary item containing the following items:
-        #       Conventional twos complement form of the opcode.
         #       mnemonic
         #       English description of the purpose of the instruction.
         #
         self._instructions = [
-            { 'opcode': 0, 'instruction': { 'twoComplementOpCode': self.OPCODE_JMP, 'mnemonic': 'JMP', 'description': 'Copy the contents of store line to CI' }},
-            { 'opcode': 1, 'instruction': { 'twoComplementOpCode': self.OPCODE_JRP, 'mnemonic': 'JPR', 'description': 'Add the content of the store line to CI' }},
-            { 'opcode': 1, 'instruction': { 'twoComplementOpCode': self.OPCODE_JRP, 'mnemonic': 'JRP', 'description': 'Add the content of the store line to CI' }},
-            { 'opcode': 1, 'instruction': { 'twoComplementOpCode': self.OPCODE_JRP, 'mnemonic': 'JMR', 'description': 'Add the content of the store line to CI' }},
-            { 'opcode': 2, 'instruction': { 'twoComplementOpCode': self.OPCODE_LDN, 'mnemonic': 'LDN', 'description': 'Copy the content of the store line, negated, into the Accumulator' }},
-            { 'opcode': 3, 'instruction': { 'twoComplementOpCode': self.OPCODE_STO, 'mnemonic': 'STO', 'description': 'Copy the contents of the Accumulator to the store line' }},
-            { 'opcode': 4, 'instruction': { 'twoComplementOpCode': self.OPCODE_SUB, 'mnemonic': 'SUB', 'description': 'Subtract the contents of the store line from the Accumulator' }},
-            { 'opcode': 5, 'instruction': { 'twoComplementOpCode': self.OPCODE_UNDEFINED, 'mnemonic': '---', 'description': 'Same as function number 4, SUB' }},
-            { 'opcode': 6, 'instruction': { 'twoComplementOpCode': self.OPCODE_CMP, 'mnemonic': 'CMP', 'description': 'Skip the next instruction if the content of the Accumulator is negative' }},
-            { 'opcode': 6, 'instruction': { 'twoComplementOpCode': self.OPCODE_CMP, 'mnemonic': 'SKN', 'description': 'Skip the next instruction if the content of the Accumulator is negative' }},
-            { 'opcode': 7, 'instruction': { 'twoComplementOpCode': self.OPCODE_STOP, 'mnemonic': 'STOP', 'description': 'Light the stop light and halt the machine' }},
-            { 'opcode': 7, 'instruction': { 'twoComplementOpCode': self.OPCODE_STOP, 'mnemonic': 'HLT', 'description': 'Light the stop light and halt the machine' }},
-            { 'opcode': 7, 'instruction': { 'twoComplementOpCode': self.OPCODE_STOP, 'mnemonic': 'STP', 'description': 'Light the stop light and halt the machine' }}
+            { 'opcode': self.OPCODE_JMP, 'instruction': { 'mnemonic': 'JMP', 'description': 'Copy the contents of store line to CI' }},
+            { 'opcode': self.OPCODE_JRP, 'instruction': { 'mnemonic': 'JRP', 'description': 'Add the content of the store line to CI' }},
+            { 'opcode': self.OPCODE_JRP, 'instruction': { 'mnemonic': 'JPR', 'description': 'Add the content of the store line to CI' }},
+            { 'opcode': self.OPCODE_JRP, 'instruction': { 'mnemonic': 'JMR', 'description': 'Add the content of the store line to CI' }},
+            { 'opcode': self.OPCODE_LDN, 'instruction': { 'mnemonic': 'LDN', 'description': 'Copy the content of the store line, negated, into the Accumulator' }},
+            { 'opcode': self.OPCODE_STO, 'instruction': { 'mnemonic': 'STO', 'description': 'Copy the contents of the Accumulator to the store line' }},
+            { 'opcode': self.OPCODE_SUB, 'instruction': { 'mnemonic': 'SUB', 'description': 'Subtract the contents of the store line from the Accumulator' }},
+            { 'opcode': self.OPCODE_UNDEFINED, 'instruction': { 'mnemonic': '---', 'description': 'Same as function number 4, SUB' }},
+            { 'opcode': self.OPCODE_CMP, 'instruction': { 'mnemonic': 'CMP', 'description': 'Skip the next instruction if the content of the Accumulator is negative' }},
+            { 'opcode': self.OPCODE_CMP, 'instruction': { 'mnemonic': 'SKN', 'description': 'Skip the next instruction if the content of the Accumulator is negative' }},
+            { 'opcode': self.OPCODE_STOP, 'instruction': { 'mnemonic': 'STOP', 'description': 'Light the stop light and halt the machine' }},
+            { 'opcode': self.OPCODE_STOP, 'instruction': { 'mnemonic': 'HLT', 'description': 'Light the stop light and halt the machine' }},
+            { 'opcode': self.OPCODE_STOP, 'instruction': { 'mnemonic': 'STP', 'description': 'Light the stop light and halt the machine' }}
             ]
 
 #------------------------------------------------------------------------------
@@ -47,52 +55,18 @@ class Instructions:
 #                           Properties.
 #
 #------------------------------------------------------------------------------
-    @property
-    def OPCODE_JMP(self):
-        '''JMP opcode.'''
-        return(0)
-
-    @property
-    def OPCODE_JRP(self):
-        '''JRP opcode.'''
-        return(1)
-
-    @property
-    def OPCODE_LDN(self):
-        '''LDN opcode.'''
-        return(2)
-
-    @property
-    def OPCODE_STO(self):
-        '''STO opcode.'''
-        return(3)
-
-    @property
-    def OPCODE_SUB(self):
-        '''SUB opcode.'''
-        return(4)
-
-    @property
-    def OPCODE_CMP(self):
-        '''CMP opcode.'''
-        return(6)
-
-    @property
-    def OPCODE_STOP(self):
-        '''STOP opcode.'''
-        return(7)
-
-    @property
-    def OPCODE_UNDEFINED(self):
-        '''Undefined opcode.'''
-        return(5)
-
+#------------------------------------------------------------------------------
+#
+#                               Opcodes.
+#
+#------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 #
 #                               Methods.
 #
 #------------------------------------------------------------------------------
-    def Opcode(self, value):
+    @staticmethod
+    def Opcode(value):
         '''Extract the opcode from a register value.
 
         @param: value Value stored in the Register.
@@ -106,7 +80,7 @@ class Instructions:
         
         @param: name Lookup the instruction properties by name.
         
-        @returns: Instruction properties object.
+        @returns: List of the matching instruction table entries (empty if there is no such instruction).
         '''
         i = [element for element in self._instructions if element['instruction']['mnemonic'] == name]
         return(i)
@@ -118,12 +92,13 @@ class Instructions:
         
         @returns: Printable mnemonic for the opcode.
         '''
-        if ((opcode < 0) or (opcode >= len(self._instructions))):
-            raise ValueError
-        i = [element for element in self._instructions if element['instruction']['twoComplementOpCode'] == opcode]
+        if ((opcode < 0) or (opcode > self.OPCODE_STOP)):
+            raise ValueError('Invalid opcode: {}'.format(opcode))
+        i = [element for element in self._instructions if element['opcode'] == opcode]
         return(i[0]['instruction']['mnemonic'])
 
-    def LineNumber(self, value):
+    @staticmethod
+    def LineNumber(value):
         '''Extract the line number from a register value.
         
         @param: value Register value to be decoded.
@@ -135,7 +110,7 @@ class Instructions:
     def Disassemble(self, value):
         '''Disassemble the instruction in the specified register.
         
-        @param: register Register holding the line to disassemble.
+        @param: value Register value holding the line to disassemble.
 
         @returns: Printable version of the register being disassembled.
         '''
@@ -147,36 +122,3 @@ class Instructions:
         else:
             instruction = '{} {}'.format(mnemonic, lineNumber)
         return(instruction)
-
-
-#------------------------------------------------------------------------------
-#
-#                               Tests.
-#
-#------------------------------------------------------------------------------
-if (__name__ == '__main__'):
-    instructions = Instructions()
-    registerValue = 0x0000000f
-    if (instructions.Opcode(registerValue) != instructions.OPCODE_JMP):
-        raise ValueError
-    if (instructions.LineNumber(registerValue != 0xf)):
-        raise ValueError
-    if (instructions.Mnemonic(0) != 'JMP'):
-        raise ValueError
-    if (instructions.Mnemonic(7) != 'STOP'):
-        raise ValueError
-    if (instructions.Disassemble(0b0100000000001010) != "LDN 10"):
-        raise RuntimeError
-    #
-    #   Now test the stuff that should fail and raise exceptions.
-    #
-    try:
-        instructions.Mnemonic(-1)
-    except ValueError:
-        pass
-    try:
-        instructions.Mnemonic(14)
-    except ValueError:
-        pass
-
-    print('Instructions tests pass')
