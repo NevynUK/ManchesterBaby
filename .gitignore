@@ -92,3 +92,4 @@ ENV/
 *.o
 ssem_main
 Source/CPP/Desktop/valgrind.txt
+**/managed_components/**
