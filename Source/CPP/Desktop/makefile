@@ -2,16 +2,20 @@ appname := ssem_main
 
 CC=gcc
 CXX=g++
-RM=rm -f
+RM=rm
 CXXFLAGS=--std=c++17 -Wall -Wextra -pedantic -g
 
 srcfiles := $(shell find . -name "*.cxx")
 srcfiles += $(shell find ../NuttX//Core -name "*.cxx")
-srcfiles += $(shell find ../NuttX/UnitTests -name "*.cxx")
-
-objects  := $(patsubst %.cxx, %.o, $(srcfiles))
 
 INCLUDES := -I../NuttX/include
+
+ifdef UNIT_TESTS
+DEFINES += -DUNIT_TESTS
+srcfiles += $(shell find ../NuttX/UnitTests -name "*.cxx")
+endif
+
+objects  := $(patsubst %.cxx, %.o, $(srcfiles))
 
 all: $(appname)
 

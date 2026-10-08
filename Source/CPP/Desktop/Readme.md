@@ -4,6 +4,16 @@ In this folder you will find the files that will allow the SSEM emulator to be r
 
 The makefile will draw the core system files from the NuttX directory as well as the files that are specific to running the application on a desktop.  For instance, the registration of the file system on the desktop differs from the registration process in NuttX.
 
+## Building Unit Tests
+
+The unit tests can be built into the system with the following command:
+
+`make UNIT_TESTS=1`
+
+This will convert the main application to run the unit tests instead of the main application.
+
+The tests can be run with the command `./ssem_main`.
+
 ## Dockerfile
 
 A Dockerfile has been provided to supply the standard desktop development tools found in Linux systems to allow the code to be built under Ubuntu Linux.  This also provides access to the valgrind tool for memory checking.
