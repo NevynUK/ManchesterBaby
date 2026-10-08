@@ -2,6 +2,7 @@
 #define __COMPILER_HXX
 
 #include "StoreLines.hxx"
+#include <cstdint>
 #include <vector>
 
 /**

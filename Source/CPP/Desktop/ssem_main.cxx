@@ -16,7 +16,7 @@ extern "C" int execute_unit_tests();
 /**
  * @brief Main program loop.
  */
-extern "C" int main(int argc, char *argv[])
+int main([[maybe_unused]] int argc, [[maybe_unused]] char *argv[])
 {
 #ifdef UNIT_TESTS
     return(execute_unit_tests() ? 0 : -1);
@@ -44,7 +44,7 @@ extern "C" int main(int argc, char *argv[])
 
     printf("\n\n\nProgram execution complete.\n");
     consoleUserInterface.UpdateDisplayTube(*storeLines);
-    printf("Executed %u instructions in %d nanoseconds.\n", instructionCount, spec2.tv_nsec - spec.tv_nsec);
+    printf("Executed %u instructions in %ld nanoseconds.\n", instructionCount, spec2.tv_nsec - spec.tv_nsec);
 
     delete storeLines;
     delete cpu;

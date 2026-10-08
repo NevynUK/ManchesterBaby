@@ -46,8 +46,8 @@ vector<const char *> *FileSystem::FileList()
     if (getcwd(applicationDirectory, sizeof(applicationDirectory)) != NULL)
     {
         char ssemApplicationDirectory[PATH_MAX];
-        snprintf(ssemApplicationDirectory, PATH_MAX, "%s/../NuttX/SSEMApps", applicationDirectory);
-        DIR *directory = opendir(ssemApplicationDirectory);
+        int length = snprintf(ssemApplicationDirectory, PATH_MAX, "%s/../NuttX/SSEMApps", applicationDirectory);
+        DIR *directory = (length > 0 && length < PATH_MAX) ? opendir(ssemApplicationDirectory) : NULL;
         if (directory != NULL)
         {
             result = new vector<const char *>;
@@ -90,8 +90,8 @@ vector<const char *> *FileSystem::Contents(const char *filename)
     if (getcwd(applicationDirectory, sizeof(applicationDirectory)) != NULL)
     {
         char fullpath[PATH_MAX];
-        snprintf(fullpath, PATH_MAX, "%s/../NuttX/SSEMApps/%s", applicationDirectory, filename);
-        FILE *file = fopen(fullpath , "r");
+        int length = snprintf(fullpath, PATH_MAX, "%s/../NuttX/SSEMApps/%s", applicationDirectory, filename);
+        FILE *file = (length > 0 && length < PATH_MAX) ? fopen(fullpath , "r") : NULL;
         if (file != NULL)
         {
             result = new vector<const char *>;
