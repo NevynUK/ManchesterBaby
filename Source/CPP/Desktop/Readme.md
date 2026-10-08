@@ -18,6 +18,25 @@ The tests can be run with the command `./ssem_main`.
 
 A Dockerfile has been provided to supply the standard desktop development tools found in Linux systems to allow the code to be built under Ubuntu Linux.  This also provides access to the valgrind tool for memory checking.
 
+To build the image, run the following from this directory:
+
+`docker build -t ssem-devtools .`
+
+The makefile uses files from the `NuttX` directory, so the parent directory must be mounted into the container:
+
+`docker run --rm -it -v "$PWD/..":/project ssem-devtools`
+
 ## runvalgrind.sh
 
 This script runs the application using valgrind producing a summary report in the file valgrind.txt.
+
+To run it under Docker, start the container as described above and then, inside the container, rebuild for Linux and run the script:
+
+```
+cd Desktop
+make clean && make
+./runvalgrind.sh
+cat valgrind.txt
+```
+
+The `make clean` is needed because any object files and `ssem_main` built on the host (for example on macOS) cannot be run under Linux.  Rebuild on the host afterwards, as `make clean` removes them from the shared directory.
