@@ -52,10 +52,15 @@ if [ ! -x "$IDF_PYTHON" ]; then
 fi
 export IDF_PYTHON
 
-# idf_py <args...> -- run idf.py from the activated IDF
+# Build directory for the command-line scripts.  It must be passed to idf.py
+# explicitly: IDF 6.1's idf.py otherwise takes the build directory from the
+# first preset in CMakePresets.json, which belongs to CLion.
+IDF_BUILD_DIR="${IDF_BUILD_DIR:-build}"
+
+# idf_py <args...> -- run idf.py from the activated IDF, in $IDF_BUILD_DIR
 idf_py()
 {
-    "$IDF_PYTHON" "$IDF_PATH/tools/idf.py" "$@"
+    "$IDF_PYTHON" "$IDF_PATH/tools/idf.py" -B "$IDF_BUILD_DIR" "$@"
 }
 
 # pick_port <glob> -- first matching serial device, or empty
