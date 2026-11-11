@@ -136,9 +136,11 @@ check_command_status() {
 }
 
 #
-# Set the IDF variable in case we are running in a shell where eim has been used to install ESP-IDF.
+# Put ESP-IDF 6.1 on PATH (override with IDF_VERSION=x.y ./build.sh) and run
+# idf.py through that installation's Python, whatever IDF the shell has active.
 #
-IDF="$IDF_PATH/tools/idf.py"
+. "$scriptdir/scripts/idf-env.sh"
+IDF="$IDF_PYTHON $IDF_PATH/tools/idf.py"
 
 #
 #   There are sometimes problems with old configuration in the build directory
