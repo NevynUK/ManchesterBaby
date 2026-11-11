@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "Debug-ESP-IDF 6.1",
+      "displayName": "Debug-ESP-IDF 6.1",
+      "description": "ESP-IDF 6.1 debug build for the M5Stack Tab5 (ESP32-P4). In CLion, needs a toolchain named \"ESP-IDF 6.1\" whose environment file is ~/.espressif/tools/activate_idf_v6.1.sh.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/cmake-build-debug-esp-idf-6.1",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "vendor": {
+        "jetbrains.com/clion": {
+          "toolchain": "ESP-IDF 6.1"
+        }
+      }
+    }
+  ]
+}
