@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# scripts/clion/openocd -- machine-independent OpenOCD for CLion's
+# "Tab5 Debug (OpenOCD)" and "Tab5 Attach (OpenOCD)" run configurations.
+#
+# CLion run configurations are committed, so they must not name a path on any
+# one machine.  They run this script instead, which finds Espressif's OpenOCD
+# (the ESP32-P4 needs the openocd-esp32 fork; a Homebrew or distro `openocd`
+# will not work) through the same IDF activation that build.sh and flash.sh
+# use, and adds its scripts directory with -s.  Arguments are passed through.
+#
+# Selection, first match wins:
+#   OPENOCD=/path/to/openocd        use this binary (OPENOCD_SCRIPTS still
+#                                   comes from IDF unless set too)
+#   IDF_ACTIVATE=/path/activate.sh  use this IDF activation script
+#   IDF_VERSION=x.y                 use ~/.espressif/tools/activate_idf_vx.y.sh
+#   (default)                       IDF 6.1
+#
+# Set these in your login shell (CLion reads it at startup on macOS) or in
+# scripts/clion/tools.local.env, which is not committed.
+
+set -euo pipefail
+_here="$(cd "$(dirname "$0")" && pwd)"
+# shellcheck disable=SC1091
+[ -f "$_here/tools.local.env" ] && . "$_here/tools.local.env"
+# shellcheck source=../idf-env.sh
+. "$_here/../idf-env.sh"
+
+exec "${OPENOCD:-openocd}" ${OPENOCD_SCRIPTS:+-s "$OPENOCD_SCRIPTS"} "$@"

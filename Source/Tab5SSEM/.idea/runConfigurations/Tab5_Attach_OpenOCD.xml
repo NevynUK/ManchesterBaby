@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Tab5 Attach (OpenOCD)" type="com.jetbrains.cidr.embedded.customgdbserver.type" factoryName="com.jetbrains.cidr.embedded.customgdbserver.factory" folderName="Tab5" PROGRAM_PARAMS="-f $PROJECT_DIR$/debug.cfg -c &quot;init&quot;" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Tab5SSEM" TARGET_NAME="Tab5SSEM.elf" CONFIG_NAME="Debug-ESP-IDF 6.1" version="1" RUN_TARGET_PROJECT_NAME="Tab5SSEM" RUN_TARGET_NAME="Tab5SSEM.elf">
+    <custom-gdb-server version="1" gdb-connect="tcp:localhost:3333" executable="$PROJECT_DIR$/scripts/clion/openocd" warmup-ms="2000" download-type="NONE" reset-cmd="monitor reset halt" reset-type="NEVER">
+      <debugger kind="GDB">$PROJECT_DIR$/scripts/clion/gdb</debugger>
+    </custom-gdb-server>
+    <method v="2" />
+  </configuration>
+</component>

@@ -140,6 +140,44 @@ I (41835) Tab5SSEM:   30: 0x00000000 - 00000000000000000000000000000000 JMP 0   
 I (41835) Tab5SSEM:   31: 0x00000000 - 00000000000000000000000000000000 JMP 0            ; 0
 ```
 
+## Building, Flashing and Debugging
+
+The application is built with **ESP-IDF 6.1** (`~/.espressif/tools/activate_idf_v6.1.sh`).  The scripts find the installation themselves through `scripts/idf-env.sh`, whichever IDF the shell has active; `IDF_VERSION=x.y` overrides the version.
+
+The Tab5 has two USB paths and they are not interchangeable:
+
+| Port | Interface | Used for |
+|------|-----------|----------|
+| `/dev/cu.usbmodem*` | ESP32-P4 USB-Serial/JTAG (USB-C) | flashing (esptool) and debugging (OpenOCD) |
+| `/dev/cu.usbserial-*` | external bridge on UART0 | application console |
+
+esptool and OpenOCD share the USB-Serial/JTAG device, so stop any debug session before flashing.  The UART0 console can stay open throughout.
+
+### Command line
+
+| Command | Action |
+|---------|--------|
+| `./build.sh` | build into `build/` |
+| `./flash.sh [-B dir] [-p port] [--no-build]` | bring the build directory up to date and flash it |
+| `./monitor.sh [-B dir] [-p port]` | open the UART0 console (no reset on open) |
+| `./debug.sh [--attach]` | start OpenOCD; `--attach` connects without resetting the board |
+| `riscv32-esp-elf-gdb -x gdbinit build/Tab5SSEM.elf` | connect GDB, reset, and stop at `app_main` |
+
+### CLion
+
+Use the **Debug-ESP-IDF 6.1** CMake profile (toolchain *ESP-IDF 6.1*, build directory `cmake-build-debug-esp-idf-6.1`), which comes from `CMakePresets.json`.  The project files hold no machine-specific paths; [scripts/clion/README.md](scripts/clion/README.md) covers the one-time setup on a new machine and the tool overrides.  The *Tab5* folder holds the run configurations:
+
+- **Tab5 Debug (OpenOCD)**: builds, flashes (via *Tab5 Flash*), resets and halts the board, then attaches GDB.
+- **Tab5 Attach (OpenOCD)**: attaches to the running application without flashing or resetting.
+- **Tab5 Flash**: `flash.sh` against CLion's build directory.
+- **Tab5 Monitor (UART0)**: `monitor.sh` in a terminal tab, decoding addresses with CLion's ELF.
+
+`debug.cfg` sets OpenOCD up for the Tab5:
+
+- **All breakpoints are hardware breakpoints** (`gdb breakpoint_override hard`).  Software breakpoints do nothing in flash, and the bootloader overwrites them in IRAM.  The P4 has only a few triggers per core, so keep the number of enabled breakpoints small.
+- **FreeRTOS thread awareness is on**, so the Threads pane lists the tasks.  If a launch ever appears to keep running while the board is halted at a breakpoint (seen with another Tab5 application, not this one), uncomment `set ESP_RTOS none` in `debug.cfg`.
+- **The board resumes when GDB detaches**, so stopping a debug session does not leave the Tab5 frozen.
+
 ## To Do
 
 - Improve error handling (for instance, SSEM program compilation errors).

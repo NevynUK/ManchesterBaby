@@ -15,5 +15,5 @@ dependencies:
   #   # All dependencies of `main` are public by default.
   #   public: true
 
-  m5stack/m5unified: ^0.2.13
-  m5stack/m5gfx: ^0.2.19
+  m5stack/m5unified: ^0.2.29
+  m5stack/m5gfx: ^0.2.36
